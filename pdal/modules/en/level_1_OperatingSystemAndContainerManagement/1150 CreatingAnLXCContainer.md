@@ -1,0 +1,226 @@
+---
+title: "Create and Start an LXC Container"
+author: ["Gudenkauf, Prof Stefan", "Ronald Kalk", "Uwe Bachmann"]
+mail: "uwe.bachmann@jade-hs.de"
+organization: "z.B. PDAL-Projekt, Jade Hochschule"
+date: "2025-08-21"
+version: "1.0.0"
+level: "Level 1, Learning Unit 1.1"
+duration: "1.0 h"
+prerequisites: "Prerequisites: A functional Proxmox installation"
+tags: ["Proxmox", "Linux", "Virtualisierung", "Basic-LXC"]
+license: "CC BY-SA 4.0"
+---
+
+# Creating an LXC Container
+
+This document describes how to create and configure a standard LXC container.
+
+The following documents will only describe the installation and configuration of applications within a functional LXC container.
+
+## 🎯 Goal
+
+Create an LXC container with the following specifications:
+
+  - **CTID:** 110
+  - **Hostname:** apache110
+  - **IP:** 192.168.137.110/24
+  - **Gateway:** 192.168.137.1
+  - **DNS:** inherited from the host
+  - **RAM:** 512 MB
+  - **Hard Drive:** 8 GB
+  - **Template:** `/var/lib/vz/template/cache/ubuntu-24.04-standard_24.04-2_amd64.tar.zst`
+
+### Additional Steps
+
+1.  Create a user `pdal` (sudoer) with the password: `myPassword`.
+2.  Perform a system update (`apt update/upgrade`).
+3.  Set the `timedatectl` timezone to `Europe/Berlin` or yout timezone.
+4.  Check network connectivity (Gateway & DNS resolution).
+
+> Note: For the PDAL project, you can exceptionally use the same user and password every time. This should, of course, never be done in production systems.
+
+-----
+
+## 🧭 1. Check and Upload the Template
+
+  - Check under `Datacenter → <local> → Templates` to see if your template is available.
+
+![CTTemplateWebinterface](./1150attachments/CTTemplateWebinterface.png)
+
+  - If not: **Upload** or download via the web UI.
+  
+![CTTemplatedlWebinterface01](./1150attachments/CTTemplatedlWebinterface01.png)
+  - Navigate to "Templates":
+
+![CTTemplatedlWebinterface02](./1150attachments/CTTemplatedlWebinterface02.png)
+  - Select the corresponding template and click "Download".
+
+![CTTemplatedlWebinterface03](./1150attachments/CTTemplatedlWebinterface03.png)
+
+After the download, the template should now be displayed.
+
+-----
+
+## 🛠️ 2. Create the Container
+
+1.  Right-click on the node → **Create CT**
+2.  **General**:
+      - CT ID: `110`
+      - Hostname: `apache110`
+      - Password: (set root password)
+      - Unprivileged: ✅
+   ![General-Tab](./1150attachments/GeneralTab.png)
+
+> Note: Proxmox uses three-digit numbers for the CT ID. We will use the last octet of the IP address as an identifier. You should also choose a descriptive name, for example, "apache110."
+
+3.  **Template**:
+
+      - Storage: e.g., `local`
+      - Select template
+  
+   ![Template-Tab](./1150attachments/TemplateTab.png)
+
+4.  **Root Disk**:
+
+      - Storage: `local-lvm`
+      - Size: `8 GiB`
+
+   ![Disks-Tab](./1150attachments/DisksTab.png)
+
+5.  **CPU & Memory**:
+
+      - Cores: `1`
+      - Memory: `512 MiB`, Swap optional `512 MiB`
+   ![CPU-Tab](./1150attachments/CPUTab.png)
+   ![Memory-Tab](./1150attachments/MemoryTab.png)
+
+6.  **Network**:
+
+      - Bridge: `vmbr0`
+      - IPv4: Static `192.168.137.110/24`
+      - Gateway: `192.168.137.1`
+
+   ![Network-Tab](./1150attachments/NetworkTab.png)
+
+7.  **DNS**:
+
+      - "Use DNS from host" (Default)
+   ![DNS-Tab](./1150attachments/DNSTab.png)
+
+8.  **Confirm**:
+
+      - "Start after created": ✅
+      - Click **Finish**
+   ![Confirm-Tab](./1150attachments/ConfirmTab.png)
+
+-----
+
+## ▶️ 3. Start Container & First Steps
+
+  - The container will start automatically or can be started manually via the web UI.
+  - Open the Console → log in with `root` + the password you set.
+![CT-Console](./1150attachments/CTConsole.png)
+![Login-Console](./1150attachments/LoginConsole.png)
+
+-----
+
+## 👤 4. Create User `pdal` & Set as Sudoer
+
+```bash
+adduser pdal
+# Password: meinPasswort
+usermod -aG sudo pdal
+```
+
+![adduser-Console](./1150attachments/AdduserConsole.png)
+
+![adduser-Console01](./1150attachments/AdduserConsole01.png)
+Set and confirm the password for user `pdal`.
+
+![adduser-Console02](./1150attachments/AdduserConsole02.png)
+![adduser-Console03](./1150attachments/AdduserConsole03.png)
+![Usermod-Console01](./1150attachments/UsermodConsole01.png)
+
+## 🌐 5. Network Check
+
+In this step, we ensure that the new container has a network connection.
+
+```bash
+ping -c3 192.168.137.1
+```
+
+> Note: The `-c3` option executes only three pings.
+
+![PingGwConsole](./1150attachments/PingGwConsole.png)
+
+This step ensures that a network connection exists. If problems occur here, please check the container's network settings - `ContainerID → Network → Network Settings`.
+
+```bash
+ping -c3 8.8.8.8
+```
+
+![PingGoogleDNSConsole](./1150attachments/PingGooglednsConsole.png)
+
+This step ensures that external IP addresses can be reached.
+
+```bash
+ping -c3 heise.de
+```
+
+![PingNameResulutionHeiseConsole](./1150attachments/PingNamensauflösungHeiseConsole.png)
+
+This step ensures that DNS resolution is working correctly.
+
+## 🔄 6. Update the System
+
+With a correctly functioning network, you can now update the system:
+
+```bash
+apt update && apt upgrade -y
+```
+
+![AptUpdateundAptUpgradeConsole01](./1150attachments/AptUpdateundAptUpgradeConsole01.png)
+![AptUpdateundAptUpgradeConsole02](./1150attachments/AptUpdateundAptUpgradeConsole02.png)
+![AptUpdateundAptUpgradeConsoleß3](./1150attachments/AptUpdateundAptUpgradeConsole03.png)
+
+## 🕒 7. Configure Timezone for Display Only and Check Status
+
+```bash
+timedatectl set-timezone Europe/Berlin
+```
+
+![TimezoneConsole](./1150attachments/TimezoneConsole.png)
+
+```bash
+timedatectl status
+```
+
+![TimedateStatusConsole](./1150attachments/TimedateStatusConsole.png)
+
+> Note: The container gets its system time from the host system (Proxmox). If the system time here is incorrect, check the settings in Proxmox.
+
+✅ 🚀 Result
+
+The `apache110` container is now:
+
+  - Configured with user pdal (sudo).
+  - Network checked (Gateway, DNS).
+  - Fully updated (apt update/upgrade).
+  - Timezone set to Europe/Berlin.
+
+You can now use the container for your purposes and install or configure corresponding applications.
+
+-----
+
+## Sources
+
+  - "Proxmox VE Documentation Index." Accessed: June 4, 2025. [Online]. Available at: [Proxmox PVE-Docs](https://pve.proxmox.com/pve-docs/)
+  - canonical, "Ubuntu Server how-to guides." [Online]. Available at: [Ubuntu Server How-To](https://documentation.ubuntu.com/_/downloads/server/en/latest/pdf/)
+
+-----
+
+### License
+This work is licensed under the **Creative Commons Attribution - ShareAlike 4.0 International License**.
+ 
+[To the license text on the Creative Commons website](https://creativecommons.org/licenses/by-sa/4.0/legalcode.en)
