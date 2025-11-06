@@ -2,8 +2,8 @@
 title: "Erstellung einer eigenen CA (Certificate Authority) und manuelle Verteilung der Zertifikate"
 author: ["Gudenkauf, Prof Stefan", "Uwe, Bachmann", "Ronald, Kalk"]
 mail: "uwe.bachmann@jade-hs.de"
-organization: "z.B. PDAL-Projekt, Jade Hochschule"
-date: "2025-08-26"
+organization: "PDAL-Projekt, Jade Hochschule"
+date: "2025-11-06"
 version: "1.0.0"
 level: "Ebene 2, Lerneinheit 2.1"
 duration: "Geschätzte Dauer (z.B. 6-10 Stunden)"
@@ -52,6 +52,8 @@ sudo apt install openssl
 ```
 
 ---
+Erstelle einen neuen Benutzer `pdal` mit sudo-Rechten. 
+Wechsel den Benutzer zu `pdal` mit `su pdal`.
 
 ### 1. Ordnerstruktur anlegen
 
@@ -74,7 +76,7 @@ echo 1000 | sudo tee ~/myCA/serial
 Erstelle im Ordner ~/myCA die Datei openssl.cnf mit folgendem Inhalt (vereinfachtes Beispiel):
 
 ```bash
-sudo nano ~/myca/openssl.cnf
+sudo nano ~/myCA/openssl.cnf
 ```
 
 ```bash
@@ -145,7 +147,7 @@ DNS.4 = CA-ssl.local
 IP.4 = 192.168.137.140
 DNS.5 = kafka.local
 IP.5 = 192.168.137.150
-DNS.6 = postgressql.local
+DNS.6 = postgresql.local
 IP.6 = 192.168.137.160
 DNS.7 = mqtt.local
 IP.7 =192.168.137.170
@@ -156,7 +158,8 @@ IP.7 =192.168.137.170
 ![OpensslCNF03](./2050attachments/OpensslCNF03.png)
 
 >Hinweis: Passe Pfade und Namen bei Bedarf an. Ersetze `/home/username` mit deinem tatsächlichen Pfad.
-Erklärung zur Konfigurationsdatei:
+
+**Erklärung zur Konfigurationsdatei:**
 
 #### [ ca ]
 
@@ -174,7 +177,7 @@ Legt fest, welche CA-Konfiguration verwendet wird.
 dir               = /home/pdal/myCA
 ```
 
-'dir' ist das Stammverzeichnis deiner CA-Dateien (Passe 'username' an deinen Benutzernamen an).
+'$dir' ist das Stammverzeichnis deiner CA-Dateien (Passe 'username' an deinen Benutzernamen an).
 
 Alle folgenden Pfade bauen darauf auf.
 
@@ -312,7 +315,7 @@ DNS.4 = CA-ssl.local
 IP.4 = 192.168.137.140
 DNS.5 = kafka.local
 IP.5 = 192.168.137.150
-DNS.6 = postgressql.local
+DNS.6 = postgresql.local
 IP.6 = 192.168.137.160
 DNS.7 = mqtt.local
 IP.7 =192.168.137.170
@@ -338,13 +341,16 @@ Diese Konfiguration definiert eine eigene CA mit:
 >1 Zertifikat für alle Server (pdal-Zertifikat).
 
 ### 2.2 CA-Schlüssel und CA-Zertifikat erstellen
+Gehe in den Ordner `~/myCA` mit dem Befehl `cd ~/myCA/`.
 
 ```bash
 sudo openssl genrsa -aes256 -out private/ca.key.pem 4096
 ```
 
 ![OpensslGenRsaCTConsole01](./2050attachments/OpensslGenRsaCTConsole01.png)
+
 zur Bestätigung gibt man ein Passwort ein. Wir wählen in unserem Beispiel`JadeHS20`, nach der Eingabe muss man das Passwort noch einmal bestätigen.
+
 ![OpensslGenRsaCTConsole02](./2050attachments/OpensslGenRsaCTConsole02.png)
 
 ```bash
@@ -360,7 +366,8 @@ sudo openssl req -config openssl.cnf \
       -out certs/ca.cert.pem
 ```
 
-Dabei wird man nach Angaben wie Land, Organisation etc. gefragt. Diese kann man passend ausfüllen.
+Dabei wird man nach Angaben wie Land, Organisation etc. gefragt. Diese **muss** man passend ausfüllen.
+
 ![CreateCaCertPemCTConsole](./2050attachments/CreateCaCertPemCTConsole.png)
 
 ## 3. Server-Zertifikat mit SAN (für alle Dienste) erstellen
@@ -376,40 +383,9 @@ sudo chmod 400 private/server.key.pem
 
 ### 3.2 Zertifikatsantrag (CSR) mit SAN erstellen
 
-Erstelle eine Datei `server.ext` mit folgendem Inhalt (SANs für alle Dienste):
-
-```bash
-sudo nano server.ext
-```
-
-```bash
-authorityKeyIdentifier=keyid,issuer
-basicConstraints=CA:FALSE
-keyUsage = digitalSignature, keyEncipherment
-extendedKeyUsage = serverAuth
-subjectAltName = @alt_names
-
-[ alt_names ]
-DNS.1 = apache.local
-IP.1 = 192.168.137.101
-DNS.2 = mariadb.local
-IP.2 = 192.168.137.120
-DNS.3 = pgadmin4.local
-IP.3 = 192.168.137.130
-DNS.4 = CA-ssl.local
-IP.4 = 192.168.137.140
-DNS.5 = kafka.local
-IP.5 = 192.168.137.150
-DNS.6 = postgressql.local
-IP.6 = 192.168.137.160
-DNS.7 = mqtt.local
-IP.7 =192.168.137.170
-```
-Wenn die Liste der einbezogenen Server identisch mit der SAN-Liste ist, kann die nur Kurzschreibweise `subjectAltName = @alt_names` verwendet werden. 
-
-![CreateServer.extCTConsole](./2050attachments/CreateServer.extCTConsole.png)
 
 **Erstelle den CSR(Certificate Signing Request):**
+
 Was ist ein CSR?
 
 Ein CSR ist eine Datei, die:
@@ -423,11 +399,12 @@ sudo openssl req \
   -new \
   -key private/server.key.pem \
   -out server.csr.pem \
-  -config /home/pdal/myCA/openssl.cnf \
+  -config ~/myCA/openssl.cnf \
   -subj "/C=DE/ST=Niedersachsen/L=Wilhelmshaven/O=Jade-Hochschule/OU=FB-MIT/CN=all-services.local"
 ```
 
 ![CertificateSigningRequestCaCTConsole](./2050attachments/CertificateSigningRequestCaCTConsole.png)
+
 Im Anschluss kann man noch überprüfen ob der key auch wirklich erstellt wurde - mit folgendem Befehl:
 
 ```bash
@@ -446,7 +423,9 @@ sudo openssl ca -config openssl.cnf -extensions v3_server -days 825 -notext -md 
 
 Man wird gefragt, ob man das Zertifikat signieren möchtest – mit y bestätigen.
 Anschließend muss man nocheinmal mit y bestätigen, damit das Zertifikat erstellt und in die Datenbank geschrieben wird.
+
 ![ZertifikatsSignierungCACTConsole](./2050attachments/ZertifikatsSignierungCACTConsole.png)
+
 Anschliessend muss man noch die Berechtigungen auf das Zertifikat setzen.
 
 ```bash
@@ -463,15 +442,15 @@ Das Zertifikat `server.cert.pem`, den Schlüssel `server.key.pem` und das CA-Zer
 
 Wir möchten:
 
-- Die Dateien ca.cert.pem, server.cert.pem und server.key.pem im CA-Container nach /home/pdal/download verschieben.
+- Die Dateien ca.cert.pem, server.cert.pem und server.key.pem im CA-Container nach /home/pdal/download kopieren.
 - Diese Dateien mit WinSCP per SFTP auf deinen lokalen Rechner in C:\tmp herunterladen.
-- Die Dateien mit WinSCP per SFTP auf den Apache2-Container hochladen nach /home/pdal/download.
-- Die Dateien von dort aus in die entsprechenden Verzeichnisse im Apache2-Container verschieben.
+- Die Dateien mit WinSCP per SFTP später auf den Apache2-Container hochladen nach /home/pdal/download. (Dies wird in einem gesonderten Dokument erklärt.)
+- Die Dateien von dort aus in die entsprechenden Verzeichnisse, z. B. in den Apache2-Container, verschieben.
 
 ### 📁 Voraussetzungen
 
-- LXC-Container für CA (ca-container) und Apache2 (apache110) sind aktiv.
-- Benutzer pdal ist in beiden Containern vorhanden.
+- LXC-Container für CA (ca-container) ist aktiv.
+- Benutzer pdal ist vorhanden.
 - SFTP-Zugriff über IP oder Hostname ist möglich.
 - SFTP Client wie z.B. WinSCP ist auf deinem Windows-Rechner installiert(funktioniert aber auch ohne seperatem Client über die Commando Zeile).
 
@@ -494,10 +473,10 @@ Da das Verzeichnis `/home/pdal/myca/private` root gehört und nur root auf diese
 Dies machen wir wie folgt. Wir sind derzeit als pdal angemeldet und müssen um Zugriff auf das private Verzeichnis zu erlangen, `sudo -i` eingeben um zum Benutzer `root` zu wechseln.
 
 ```bash
-sudo cp /home/pdal/myca/certs/ca.cert.pem /home/pdal/download/
-sudo cp /home/pdal/myca/certs/server.cert.pem /home/pdal/download/
+sudo cp /home/pdal/myCA/certs/ca.cert.pem /home/pdal/download/
+sudo cp /home/pdal/myCA/certs/server.cert.pem /home/pdal/download/
 sudo -i
-cp /home/pdal/myca/private/server.key.pem /home/pdal/download/
+cp /home/pdal/myCA/private/server.key.pem /home/pdal/download/
 ```
 Dies folgt der Syntax `sudo cp dieZuKopierendeDateiMitPfad dasZielVerzeichnis`.
 
@@ -536,7 +515,7 @@ Markiere die Dateien `ca.cert.pem`, `server.cert.pem`, `server.key.pem`.
 
 Ziehe sie in das lokale Verzeichnis auf deinem PC:
 
-C:\tmp
+`C:\tmp`
 ![WinSCPCertsDownloadCtempCA](./2050attachments/WinSCPCertsDownloadCtempCA.png)
 
 Es geht aber auch komplett ohne extra Apps wie WinSCP. Ab Windows 10/11 habe ich die Möglichkeit über die Eingabeaufforderung über den Befehl `scp` die Dateien herunter zu laden. Hierzu die einzelnen Schritte wie das funktioniert.
@@ -570,80 +549,13 @@ Ziehe im lokalen Fenster (C:\tmp) die drei .pem-Dateien hinein.
 
 ![WinSCPCertsUploadHomePdalDownloadApache202](./2050attachments/WinSCPCertsUploadHomePdalDownloadApache202.png)
 
-🔹 4. Dateien im Apache2-Container an Zielorte verschieben
-Beispiel: Du meldest dich im Apache2-Container über die Proxmox-Webgui in der Konsole vom apache2 Container an:
-
-### Zertifikatsverzeichnis
-
-```bash
-/etc/ssl/certs
-/etc/ssl/private
-```
-
-### Dateien überprüfen/ verschieben
-
-```bash
-ls -l /home/pdal/download/
-sudo mv /home/pdal/download/ca.cert.pem /etc/ssl/certs/
-sudo mv /home/pdal/download/server.cert.pem /etc/ssl/certs/
-sudo mv /home/pdal/download/server.key.pem /etc/ssl/private/
-```
-
-![MvCertsEtcSslCertsApache2Console](./2050attachments/MvCertsEtcSslCertsApache2Console.png)
-
-### Rechte anpassen (wichtig für Apache2)
-
-```bash
-chmod 644 /etc/ssl/certs/ca.cert.pem
-chmod 644 /etc/ssl/certs/server.cert.pem
-sudo -i # wechsel auf root, da das Verzeichnis /etc/ssl/private nur von root gelesen werden darf
-chmod 600 /etc/ssl/private/server.key.pem
-```
-
-Anhand der Bilder kann man auch deutlich erkennen, das wir nach jeder Änderung, die Berechtigungen mit `ls -l` überprüfen.
-
-![Chmod644CaCertApache2](./2050attachments/Chmod644CaCertApache2.png)
-![Chmod644ServerCertApache2](./2050attachments/Chmod644ServerCertApache2.png)
-![Chmod600ServerKeyApache2](./2050attachments/Chmod600ServerKeyApache2.png)
-
-Jetzt können wir in der Konsole `exit` eingeben um wieder zum User pdal zurück zu kehren.
-📎 Hinweis zur Apache2-Konfiguration
-
-Vergiss nicht, in der Apache2-Konfiguration (z. B. /etc/apache2/sites-available/default-ssl.conf) die Pfade korrekt anzugeben:
-
-```bash
-sudo nano /etc/apache2/sites-available/default-ssl.conf
-
-SSLCertificateFile /etc/ssl/certs/server.cert.pem
-SSLCertificateKeyFile /etc/ssl/private/server.key.pem
-SSLCACertificateFile /etc/ssl/certs/ca.cert.pem
-```
-
-![Apache2DefaultSslConfig](./2050attachments/Apache2DefaultSslConfig.png)
-
-Dann:
-
-```bash
-a2enmod ssl
-a2ensite default-ssl
-sudo systemctl restart apache2
-```
-
-![ApacheEnablesslEnsiteRestart](./2050attachments/ApacheEnablesslEnsiteRestart.png)
-
-### 4.1 Apache2 (Beispiel)
-
-```bash
-SSLCertificateFile /etc/ssl/certs/server.cert.pem
-SSLCertificateKeyFile /etc/ssl/private/server.key.pem
-SSLCACertificateFile /etc/ssl/certs/ca.cert.pem
-```
 
 ## 5. Zertifikat auf Windows, Mac, Linux installieren
 
 Importiere das CA-Zertifikat (ca.cert.pem) als vertrauenswürdige Zertifizierungsstelle in den jeweiligen Betriebssystemen. Diesen Schritt machen wir, damit Browser oder andere Tools ein sichere Verbindung ohne Zertifikatsfehler aufbauen können. 
 
 So erkennen deine Clients alle Zertifikate, die von deiner CA stammen, als vertrauenswürdig.
+
 ![ICSBenutzerZertifikatsVerwaltung01](./2050attachments/ICSBenutzerZertifikatsVerwaltung01.png)
 ![CertMngrTrustedCerts](./2050attachments/CertMngrTrustedCerts.png)
 ![CertMngrTrustedCerts02](./2050attachments/CertMngrTrustedCerts02.png)

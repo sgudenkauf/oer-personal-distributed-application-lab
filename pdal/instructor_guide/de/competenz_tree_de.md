@@ -103,6 +103,9 @@ Ziel ist es, Ihnen ein strukturiertes, aber dennoch anpassbares Framework an die
         * **Lerneinheit 2.1: Webserver Apache2: HTTP und PHP (5-8 Stunden)**
             * **Ziel:** Installation und Grundkonfiguration von Apache2 als Webserver, Bereitstellung von HTTP-Inhalten und Integration von PHP.
             * **Inhalte:** `apt install apache2 php libapache2-mod-php`, Konfigurationsdateien, virtuellen Hosts, `phpinfo()`.
+          * **Lerneinheit 2.1.5: Zertifikatsverwaltung und HTTPS für Apache2 (4-6 Stunden)**
+              * **Ziel:** Einrichten einer einfachen lokalen CA in einem Container und Erstellen/Signieren von SSL/TLS-Zertifikaten für Apache2 zur Aktivierung von **HTTPS**.
+              * **Inhalte:** OpenSSL-Befehle (CA, Schlüssel, CSR, Signieren), Apache2-SSL-Modul (`a2enmod ssl`), Konfiguration von SSL-Virtual-Hosts.
         * **Lerneinheit 2.2: MariaDB und phpMyAdmin Integration (5-8 Stunden)**
             * **Ziel:** Installation von MariaDB als Datenbankserver und phpMyAdmin zur Administration. Anbindung an Apache2/PHP.
             * **Inhalte:** `apt install mariadb-server phpmyadmin`, Benutzer- und Rechteverwaltung in MariaDB, phpMyAdmin-Konfiguration, Erstellung einfacher Datenbanken und Tabellen. 
@@ -124,9 +127,7 @@ Ziel ist es, Ihnen ein strukturiertes, aber dennoch anpassbares Framework an die
         * **Lerneinheit 2.6: Datenbank PostgrSQL und Datenbankmangementsystem (DBMS) pgadmin4**
           * **Ziel:** Installation von PostgreSQL und pgadmin4 und Anlegen unterschiedlicher Nutzergruppen/-user, Anlegen von Datenbank und Zuweisung von Rechten, Absicherung mit SSL
           * **Inhalte:** `apt install postgres`, Benutzer- und Rechteverwaltung, SSL-Zertifikate, Konfiguration PostgreSQL und pgadmin4.
-        * **Lerneinheit 2.7: Zertifikatsverwaltung und HTTPS für Apache2 (4-6 Stunden)**
-            * **Ziel:** Einrichten einer einfachen lokalen CA in einem Container und Erstellen/Signieren von SSL/TLS-Zertifikaten für Apache2 zur Aktivierung von **HTTPS**.
-            * **Inhalte:** OpenSSL-Befehle (CA, Schlüssel, CSR, Signieren), Apache2-SSL-Modul (`a2enmod ssl`), Konfiguration von SSL-Virtual-Hosts.
+
         * **Lerneinheit 2.8: JupyterLab: Python, Java, R für Datenanalyse & Interaktion (6-10 Stunden)**
             * **Ziel:** Installation und Konfiguration von JupyterLab und Nutzung für interaktive Skripte und Datenanalyse in Python, Java und R.
             * **Inhalte:** `apt install jupyterlab`, Installation von Kernels (Python, IJava, R-Kernel), Einbinden externer Bibliotheken (z.B. `pandas`, `requests`, `paho`), Schreiben einfacher Code-Zellen zur Interaktion mit anderen PDAL-Diensten (z.B. REST-API-Calls, MQTT-Publishing).
