@@ -7,8 +7,8 @@ date: "2025-10-10"
 version: "1.0.0"
 level: "Ebene 2, Lerneinheit 2.1.5"
 duration: "Geschätzte Dauer (z.B. 4-6 Stunden)"
-prerequisites: "Tiny- PC mit installiertem Proxmox und mindestens 2 LXC-Container: Apache2, CA"
-tags: ["Proxmox", "Linux", "Virtualisierung", "Basics"]
+prerequisites: ["Abgeschlossen - 2100 - Apache2-Webserver & Benutzerverwaltung im LXC-Container", "Abgeschlossen - 2050 - Erstellung einer eigenen CA (Certificate Authority) und manuelle Verteilung der Zertifikate"]
+tags: ["Proxmox", "Linux", "Virtualisierung", "Apache2 Webserver", "Zertifikataverwaltung"]
 license: "CC BY-NC-SA 4.0"
 ---
 
@@ -71,6 +71,10 @@ In diesem Kapitel erstellen wir ein Zertifikat für unseren Apache2-Webserver au
 
 Die einzelnen Schritte die hierzu notwendig sind werden im Dokument [[2050 CA-sslmitSANZertifikat]] genauer beschrieben.
 
+---
+
+Wechseln Sie nun zu CA-LXC:
+
 ### 4.1 Schlüssel für den Apache2-Server generieren
 
 ```bash
@@ -94,8 +98,8 @@ Ein **CSR**(Certificate Signing Request) ist eine Anfrage an die CA, ein Zertifi
 
 ```bash
 sudo openssl x509 -req -in /etc/ssl/apache.csr.pem \
-  -CA /etc/ssl/myCA/certs/ca.cert.pem -CAkey /etc/ssl/myCA/private/ca.key.pem \
-  -CAcreateserial -out /etc/ssl/certs/apache.cert.pem -days 825 -sha256
+  -CA ~/myCA/certs/ca.cert.pem -CAkey ~/myCA/private/ca.key.pem \
+  -CAcreateserial -out ~/myCA/certs/apache.cert.pem -days 825 -sha256
 ```
 
 Hier signiert unsere CA den CSR und erstellt ein **gültiges Serverzertifikat**.
