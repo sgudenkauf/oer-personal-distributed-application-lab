@@ -151,6 +151,8 @@ DNS.6 = postgresql.local
 IP.6 = 192.168.137.160
 DNS.7 = mqtt.local
 IP.7 =192.168.137.170
+DNS.8 = grafana.local
+IP.8 = 192.168.137.190
 ```
 
 ![OpensslCNF01](./2050attachments/OpensslCNF01.png)
@@ -319,6 +321,8 @@ DNS.6 = postgresql.local
 IP.6 = 192.168.137.160
 DNS.7 = mqtt.local
 IP.7 =192.168.137.170
+DNS.8 = grafana.local
+IP.8 = 192.168.137.190
 ```
 
 Dies ist die SAN-Liste (Subject Alternative Name).

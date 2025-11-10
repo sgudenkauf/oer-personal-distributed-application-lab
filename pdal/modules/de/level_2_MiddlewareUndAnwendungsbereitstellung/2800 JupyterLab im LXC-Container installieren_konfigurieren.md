@@ -570,6 +570,8 @@ rsync -a ~/jupyterlab/projects /mnt/backup/jupyterlab/
 - „Installation — JupyterLab 4.5.0a1 documentation“. Zugegriffen: 28. Juli 2025. [Online]. Verfügbar unter: [Jupyterlab Installation](https://jupyterlab.readthedocs.io/en/latest/getting_started/installation.html)
 - S. Park, SpencerPark/IJava. (27. Juli 2025). Java. Zugegriffen: 28. Juli 2025. [Online]. Verfügbar unter: [Github IJava](https://github.com/SpencerPark/IJava)
 
+--- 
+
 ## Lizenz
 
 Dieses Werk ist lizenziert unter der **Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz**.
