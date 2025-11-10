@@ -72,6 +72,7 @@ echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stab
 # Paketlisten aktualisieren
 sudo apt update
 ```
+
 ![GrafaneBindRepositoryCTConsole](./2900attachments/GrafanaBindRepositoryCTConsole2.png)
 
 **Erläuterung:**
@@ -86,7 +87,7 @@ sudo apt install -y grafana
 ![GrafanaAptInstallGrafanaCTConsole](./2900attachments/GrafanaAptInstallGrafanaCTConsole.png)
 
 **Erläuterung:**
-Das Grafana-Paket wird aus dem zuvor eingebundenen Repository heruntergeladen und installiert. Dabei werden die benötigten Dienste und Konfigurationsdateien im Verzeichnis /etc/grafana/ abgelegt.
+Das Grafana-Paket wird aus dem zuvor eingebundenen Repository heruntergeladen und installiert. Dabei werden die benötigten Dienste und Konfigurationsdateien im Verzeichnis `/etc/grafana/` abgelegt.
 
 ## 7. Grafana-Dienst aktivieren, starten und Status abfragen
 
@@ -113,6 +114,8 @@ http://<IP-Adresse>:3000
 ```
 
 als Beispiel: `http://192.168.137.170:3000`
+
+
 ![GrafanaLoginBrowser](./2900attachments/GrafanaLoginBrowser.png)
 
 **Erläuterung:**
