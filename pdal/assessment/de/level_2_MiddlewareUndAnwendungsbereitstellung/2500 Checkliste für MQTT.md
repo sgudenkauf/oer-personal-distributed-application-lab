@@ -7,7 +7,7 @@ date: "2025-09-25"
 version: "1.0.0"
 level: "Ebene 2, Lerneinheit 2.3, Assessment"
 duration: "0,2 Std"
-prerequisites:["Abgeschlossen - 2500 MQTT auf vorhandenem LXC installieren und konfigurieren"]
+prerequisites: ["Abgeschlossen - 2500 MQTT auf vorhandenem LXC installieren und konfigurieren"]
 tags: ["PDAL","Assessment"]
 license: "CC BY-SA 4.0"
 ---

@@ -7,7 +7,7 @@ date: "2025-10-30"
 version: "1.0.0"
 level: "Ebene 2, Lerneinheit 2.6.5, Assessment"
 duration: "0,2 Std"
-prerequisites:["Abgeschlossen - 2600 PostgreSQL auf LXC installieren, konfigurieren und absichern"]
+prerequisites: ["Abgeschlossen - 2600 PostgreSQL auf LXC installieren, konfigurieren und absichern"]
 tags: ["PDAL","Assessment", "pgAdmin4", "Funktionsprüfung"]
 license: "CC BY-SA 4.0"
 ---

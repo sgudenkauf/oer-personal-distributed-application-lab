@@ -7,7 +7,7 @@ date: "2025-11-07"
 version: "1.0.0"
 level: "Level 2, Learning Unit 2.8, Assessment"
 duration: "0.2 Hrs"
-prerequisites:["Completed - 2900 Install Grafana in an LXC Container"]
+prerequisites: ["Completed - 2900 Install Grafana in an LXC Container"]
 tags: ["PDAL","Assessment", "Grafana", "Functionality Check"]
 license: "CC BY-SA 4.0"
 ---

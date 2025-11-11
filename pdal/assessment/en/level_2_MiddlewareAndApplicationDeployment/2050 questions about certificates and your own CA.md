@@ -7,7 +7,7 @@ date: "2025-09-24"
 version: "1.0.0"
 level: "Level 2, Learning Unit 1.05, Assessment"
 duration: "0.2 Hrs"
-prerequisites:["Completed - Document: 2050 - Creating a Custom CA (Certificate Authority) and Manually Distributing Certificates"]
+prerequisites: ["Completed - Document: 2050 - Creating a Custom CA (Certificate Authority) and Manually Distributing Certificates"]
 tags: ["PDAL","Assessment"]
 license: "CC BY-SA 4.0"
 ---

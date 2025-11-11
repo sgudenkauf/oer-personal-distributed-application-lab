@@ -7,7 +7,7 @@ date: "2025-09-25"
 version: "1.0.0"
 level: "Level 2, Learning Unit 2.3, Assessment"
 duration: "0.2 hours"
-prerequisites:["Completed - 2300 Custom Web Application with Database Connection"]
+prerequisites: ["Completed - 2300 Custom Web Application with Database Connection"]
 tags: ["PDAL","Assessment"]
 license: "CC BY-SA 4.0"
 ---

@@ -7,7 +7,7 @@ date: "2025-09-24"
 version: "1.0.0"
 level: "Ebene 2, Lerneinheit 1.05, Assessment"
 duration: "0,2 Std"
-prerequisites:["Abgeschlossen -  Dokument: 2050 - Erstellung einer eigenen CA (Certificate Authority) und manuelle Verteilung der Zertifikate"]
+prerequisites: ["Abgeschlossen -  Dokument: 2050 - Erstellung einer eigenen CA (Certificate Authority) und manuelle Verteilung der Zertifikate"]
 tags: ["PDAL","Assessment"]
 license: "CC BY-SA 4.0"
 ---

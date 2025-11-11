@@ -7,7 +7,8 @@ date: "2025-09-25"
 version: "1.0.0"
 level: "Level 2, Learning Unit 2.1, Assessment"
 duration: "0.2 hours"
-prerequisites:["Completed - Document: 2100 - Apache2 Web Server & User Management in an LXC Container"]
+prerequisites: 
+["Completed - Document: 2100 - Apache2 Web Server & User Management in an LXC Container"]
 tags: ["PDAL","Assessment"]
 license: "CC BY-SA 4.0"
 ---

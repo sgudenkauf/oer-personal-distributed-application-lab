@@ -7,7 +7,7 @@ date: "2025-11-07"
 version: "1.0.0"
 level: "Level 2, Learning Unit 2.8, Assessment"
 duration: "0.2 hours"
-prerequisites:["Completed - 2800 Install & Configure JupyterLab in LXC Container"]
+prerequisites: ["Completed - 2800 Install & Configure JupyterLab in LXC Container"]
 tags: ["PDAL","Assessment", "JupyterLab", "Function Check"]
 license: "CC BY-SA 4.0"
 ---

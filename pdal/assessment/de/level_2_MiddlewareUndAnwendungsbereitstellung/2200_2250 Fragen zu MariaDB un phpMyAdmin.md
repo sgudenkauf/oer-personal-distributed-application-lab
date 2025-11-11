@@ -7,7 +7,7 @@ date: "2025-09-25"
 version: "1.0.0"
 level: "Ebene 2, Lerneinheit 2.2x, Assessment"
 duration: "0,2 Std"
-prerequisites:["Abgeschlossen - 2100 Apache2-Webserver und Benutzerverwaltung im LXC-Container", "Abgeschossen - Installation und Konfiguration von phpMyAdmin im Apache2 LXC", "Abgeschlossen - Installation und Konfiguration von MariaDB im LXC-Container"]
+prerequisites: ["Abgeschlossen - 2100 Apache2-Webserver und Benutzerverwaltung im LXC-Container", "Abgeschlossen - Installation und Konfiguration von phpMyAdmin im Apache2 LXC", "Abgeschlossen - Installation und Konfiguration von MariaDB im LXC-Container"]
 tags: ["PDAL","Assessment"]
 license: "CC BY-SA 4.0"
 ---
