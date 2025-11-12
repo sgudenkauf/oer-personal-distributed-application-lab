@@ -11,7 +11,7 @@ prerequisites: ""
 tags: ["PDAL", "Motivation", "Introduction"]
 license: "CC BY-SA 4.0"
 ---
----
+
 ### PDAL: The Foundation for Distributed Applications and Systems
 
 **Distributed Systems** are the engine of our modern world. They describe the infrastructure of interconnected computers that work together to achieve a common goal. Every time you use an app like TikTok, stream a video on Netflix, or make a purchase on Amazon, you're interacting with such systems, which are composed of thousands of servers. Within these systems, **distributed applications** run, such as a microservices architecture. Understanding this infrastructure and the applications that run on it is one of the most sought-after skills in today's job market.
