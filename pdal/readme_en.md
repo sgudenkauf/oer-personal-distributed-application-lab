@@ -18,7 +18,7 @@ license: "CC BY-SA 4.0"
 
 ### The Challenge of Practical Learning
 
-To truly understand distributed systems, it's essential to build them yourself and develop applications for them. In traditional courses, this is often difficult, as working on real, production servers is too risky. At the same time, theoretical concepts often remain abstract without practical application. The PDAL (Personal Distributed Applications Lab) bridges this gap.
+To truly understand distributed systems, it's essential to build them yourself and develop applications for them. In traditional courses, this is often difficult, as working on real, production servers is too risky. At the same time, theoretical concepts often remain abstract without practical application. The **PDAL (Personal Distributed Applications Lab)** bridges this gap.
 
 ### The PDAL: Your Personal Data Center
 

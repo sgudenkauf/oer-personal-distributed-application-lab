@@ -20,7 +20,7 @@ license: "CC BY-SA 4.0"
 
 ### Die Herausforderung des praktischen Lernens
 
-Um verteilte Systeme zu verstehen, ist es unerlässlich, sie selbst aufzubauen und darauf Anwendungen zu entwickeln. In traditionellen Kursen ist dies oft schwierig, da das Arbeiten auf echten, produktiven Servern zu riskant ist. Gleichzeitig bleiben theoretische Konzepte ohne praktische Anwendung abstrakt. Das PDAL (Personal Distributed Applications Lab) schließt genau diese Lücke.
+Um verteilte Systeme zu verstehen, ist es unerlässlich, sie selbst aufzubauen und darauf Anwendungen zu entwickeln. In traditionellen Kursen ist dies oft schwierig, da das Arbeiten auf echten, produktiven Servern zu riskant ist. Gleichzeitig bleiben theoretische Konzepte ohne praktische Anwendung abstrakt. Das **PDAL (Personal Distributed Applications Lab)** schließt genau diese Lücke.
 
 ### Das PDAL: Das eigene Rechenzentrum
 
