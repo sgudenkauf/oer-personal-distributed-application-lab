@@ -138,7 +138,7 @@ subjectAltName = @alt_names
 
 [ alt_names ]
 DNS.1 = apache.local
-IP.1 = 192.168.137.101
+IP.1 = 192.168.137.110
 DNS.2 = mariadb.local
 IP.2 = 192.168.137.120
 DNS.3 = pgadmin4.local
@@ -308,7 +308,7 @@ Erweiterungen für Server-Zertifikate:
 
 ```bash
 DNS.1 = apache.local
-IP.1 = 192.168.137.101
+IP.1 = 192.168.137.110
 DNS.2 = mariadb.local
 IP.2 = 192.168.137.120
 DNS.3 = pgadmin4.local
@@ -539,7 +539,7 @@ Die 3 Dateien befinden sich nun im `tmp` Verzeichnis unter `C:`
 
 In WinSCP, öffne eine neue SFTP-Sitzung zum Apache2-Container:
 
-- Host: `192.168.137.101`
+- Host: `192.168.137.110`
 - Benutzer: `pdal`
 - Passwort: `JadeHS20`
 
