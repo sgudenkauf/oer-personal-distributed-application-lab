@@ -42,7 +42,7 @@ Für den Start sind folgende Materialien notwendig:
 * **USB-Netzwerkkarte:** Ermöglicht die Isolation des PDAL vom Heimnetzwerk.
 * **Übungsrechner:** Ein dedizierter Rechner (z.B. ein älterer Laptop oder ein Mini-PC), der ausschließlich für das PDAL genutzt wird.
 
-![Ausstattung](./attachment/Ausstattung.jpg)
+![Ausstattung](./pdal/attachment/Ausstattung.jpg)
 
 ### Lernziele des PDAL
 
