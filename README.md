@@ -1,6 +1,3 @@
-# oer-personal-distributed-application-lab
-A safe, personal learning environment for creating distributed systems and developing distributed applications
-
 ---
 title: "Lernen mit dem PDAL: Grundlagen für verteilte Anwendungen und Systeme"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe"]
