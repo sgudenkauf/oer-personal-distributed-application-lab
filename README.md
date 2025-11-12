@@ -13,7 +13,7 @@ license: "CC BY-SA 4.0"
 ---
 English text below.
 
-# Lernen mit dem PDAL: Grundlagen für verteilte Anwendungen und Systeme
+# Lernen mit dem PDA (Personal Distributed Applications Lab): Grundlagen für verteilte Anwendungen und Systeme
 
 ### Die Bedeutung verteilter Systeme
 
