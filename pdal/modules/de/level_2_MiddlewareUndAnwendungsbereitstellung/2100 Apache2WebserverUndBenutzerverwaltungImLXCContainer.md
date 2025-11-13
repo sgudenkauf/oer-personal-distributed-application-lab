@@ -137,9 +137,9 @@ Die Webseite ist nach dem Hochladen und Setzen der Rechte im Browser verfügbar.
    <html lang="de">
    <head>
      <meta charset="utf-8">
-      content="width=device-width, initial-scale=1">
-     <title>Apache Testseite</title>
+     <meta content="width=device-width, initial-scale=1">
      <meta name="description" content="Ein W3C-konformes Beispiel-Dokument zur Überprüfung der Apache-Konfiguration">
+     <title>Apache Testseite</title>
    </head>
    <body>
      <header>

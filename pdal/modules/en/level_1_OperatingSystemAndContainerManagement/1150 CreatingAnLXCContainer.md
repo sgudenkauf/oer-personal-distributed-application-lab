@@ -213,6 +213,100 @@ You can now use the container for your purposes and install or configure corresp
 
 -----
 
+## 8\. Setting the UTF-8 Character Set
+
+Choosing the correct character set can often simplify your work.
+First, check which character set is currently set:
+
+```bash
+locale
+```
+
+If the output appears as:
+
+```text
+LANG=C
+LANGUAGE=
+LC_CTYPE="C"
+LC_NUMERIC="C"
+LC_TIME="C"
+LC_COLLATE="C"
+LC_MONETARY="C"
+LC_MESSAGES="C"
+LC_PAPER="C"
+LC_NAME="C"
+LC_ADDRESS="C"
+LC_TELEPHONE="C"
+LC_MEASUREMENT="C"
+LC_IDENTIFICATION="C"
+LC_ALL=
+```
+
+the **ASCII character set** is active. This set does not support country-specific special characters—e.g., **ü, Ü, €, etc.**
+
+Therefore, it makes sense to switch to a UTF-8 character set.
+
+-----
+
+### 💡 What is UTF-8?
+
+**UTF-8** (**U**nicode **T**ransformation **F**ormat - 8-bit) is the **globally dominant character encoding** today. Unlike older encodings (like ASCII or ISO-8859-1), UTF-8 can represent **all characters** and symbols from all languages (including umlauts, accents, Chinese, emojis) in a uniform format. Using UTF-8 ensures that text in log files, console output, and configuration files is displayed **correctly and consistently**.
+
+-----
+
+### 🌐 National vs. Neutral UTF-8 Locales
+
+UTF-8 character sets come in neutral and country-specific forms. These are defined in the **Locale** (the regional setting).
+
+The Locale determines not only the encoding but also country-specific rules for:
+
+* **Date and Time**
+* **Currency and Number Format** (e.g., comma vs. period as decimal separator)
+* **Sort Order** (`LC_COLLATE`)
+
+For servers and containers used internationally or for scripts, the **neutral C.UTF-8 locale** is often the best standard.
+
+| Locale | Meaning | Application |
+| :--- | :--- | :--- |
+| **`de_DE.UTF-8`** | **National Locale** (German, Germany) | Aligns formats (numbers, sorting) with German rules. Good for desktop users. |
+| **`C.UTF-8`** | **Neutral Locale** (C-Standard with UTF-8) | Uses standardized, binary sorting rules and a period as the decimal separator. **Optimal for servers and scripts** as it provides consistent and predictable output. |
+
+If you prefer a local setting, look up the correct designation in the list under `nano /etc/locale.gen` and replace `C.UTF-8` with the desired designation.
+
+-----
+
+### 🛠️ Setting up the Neutral C.UTF-8 Locale
+
+By default, the outdated `LANG=C` (ASCII) is often used in the container. To switch this to the modern standard **`C.UTF-8`**, follow these steps:
+
+1.   **Generate Locale (if necessary):** Ensure that the locale is available.
+
+```bash
+sudo locale-gen C.UTF-8  
+```
+
+1.   **Set Standard Locale Permanently:** Overwrite the old `C` settings with `C.UTF-8` in the system's configuration files.
+
+```bash    
+sudo update-locale LANG=C.UTF-8 LC_ALL=C.UTF-8
+```
+
+3.   **Activate Changes:** Log out of the shell and log back in, or restart the container.
+
+```bash     
+exit # and log back in      
+``` 
+
+4.   **Verification:** Check the new settings.
+
+```bash     
+locale      
+```
+
+    \> **Result:** The output should now show `LANG=C.UTF-8` and `LC_ALL=C.UTF-8`.
+
+---
+
 ## Sources
 
   - "Proxmox VE Documentation Index." Accessed: June 4, 2025. [Online]. Available at: [Proxmox PVE-Docs](https://pve.proxmox.com/pve-docs/)
