@@ -1,14 +1,14 @@
 ---
 title: "Zertifikatsverwaltung und HTTPS für Apache2"
 author: ["Gudenkauf, Prof Stefan", "Uwe, Bachmann", "Ronald, Kalk"]
-mail: "uwe.bachmann@jade-hs.de"
+email: "uwe.bachmann@jade-hs.de"
 organization: "z.B. PDAL-Projekt, Jade Hochschule"
-date: "2025-10-10"
+date: "2025-11-13"
 version: "1.0.0"
 level: "Ebene 2, Lerneinheit 2.1.5"
-duration: "Geschätzte Dauer (z.B. 4-6 Stunden)"
-prerequisites: ["Abgeschlossen - 2100 - Apache2-Webserver & Benutzerverwaltung im LXC-Container", "Abgeschlossen - 2050 - Erstellung einer eigenen CA (Certificate Authority) und manuelle Verteilung der Zertifikate"]
-tags: ["Proxmox", "Linux", "Virtualisierung", "Apache2 Webserver", "Zertifikataverwaltung"]
+duration: "Geschätzte Dauer (z.B. 0.5 - 1 Stunde)"
+prerequisites: ["Tiny- PC mit installiertem Proxmox und mindestens 2 LXC-Container: Apache2, CA"]
+tags: ["Apache2", "HTTPS", "Zertifikate", "CA", "OpenSSL", "Linux"]
 license: "CC BY-NC-SA 4.0"
 ---
 
@@ -57,9 +57,51 @@ In dieser Anleitung wird eine **eigene CA** verwendet, um die Zertifikatserstell
 
 **Einleitung:**
 
-Damit wir unsere eigenen Zertifikate ausstellen können, benötigen wir eine **eigene Zertifizierungsstelle (CA)**. Diese CA ist der zentrale Punkt der Vertrauenskette – sie signiert Serverzertifikate und stellt damit sicher, dass die Identität eines Servers überprüfbar ist.
+Damit wir unsere eigenen Zertifikate ausstellen können, benötigen wir eine **eigene Zertifizierungsstelle (CA)**. Diese CA ist der zentrale Punkt der Vertrauenskette – sie signiert Serverzertifikate und stellt sicher, dass die Identität eines Servers überprüfbar ist.
 
-Dies wird genauer im Dokument [[2050 CA-sslmitSANZertifikat]] beschrieben.
+Weitere Details und Beispiele zur vollständigen Einrichtung der CA findest du im Dokument [[2050 CA-sslmitSANZertifikat]].
+
+### 3.1 CA-Verzeichnisstruktur
+
+Wer das [[2050 CA-sslmitSANZertifikat]] Dokument bereits bearbeitet hat, hat diesen Schritt bereits erledigt und kann die Schritte 3 und 4 überspringen.
+
+Eine typische Verzeichnisstruktur für die eigene CA könnte wie folgt aussehen:
+
+```text
+/home/pdal/myCA/
+├─ certs/           # ausgestellte Zertifikate
+├─ crl/             # Zertifikatsperrlisten
+├─ newcerts/        # neue Zertifikate
+├─ private/         # private Schlüssel (geheim!)
+├─ index.txt        # CA-Datenbank
+├─ serial           # Seriennummer der nächsten Zertifikate
+```
+
+### 3.2 Wichtige Dateien
+
+```bash
+/home/pdal/myCA/private/ca.key.pem   # privater Schlüssel der CA
+/home/pdal/myCA/certs/ca.cert.pem    # Root-Zertifikat der CA
+```
+
+### 3.3 Root-CA-Zertifikat erstellen
+
+Beispielbefehle zur Erstellung des Root-Schlüssels und des Root-Zertifikats:
+
+```bash
+# Privater Schlüssel der Root-CA (nur für root zugänglich)
+openssl genrsa -out /home/pdal/myCA/private/ca.key.pem 4096
+
+# Root-Zertifikat erstellen (selbstsigniert)
+openssl req -x509 -new -nodes -key /home/pdal/myCA/private/ca.key.pem \
+  -sha256 -days 3650 -out /home/pdal/myCA/certs/ca.cert.pem \
+  -subj "/C=DE/ST=Niedersachsen/L=Wilhelmshaven/O=Hochschule/OU=IT/CN=MyRootCA"
+```
+
+**Hinweis:**
+
+* Diese Struktur und Befehle ermöglichen es, die CA direkt nachzubauen, ohne dass ein anderes Dokument geöffnet werden muss.
+* Alle privaten Schlüssel müssen streng geschützt werden, um die Sicherheit der CA nicht zu gefährden.
 
 ---
 
@@ -67,71 +109,124 @@ Dies wird genauer im Dokument [[2050 CA-sslmitSANZertifikat]] beschrieben.
 
 **Einleitung:**
 
-In diesem Kapitel erstellen wir ein Zertifikat für unseren Apache2-Webserver auf unserem bereits erstellten CA LXC. Dieses Zertifikat wird von unserer CA signiert und ermöglicht eine sichere HTTPS-Verbindung in unserem lokalen Netzwerk.
-
-Die einzelnen Schritte die hierzu notwendig sind werden im Dokument [[2050 CA-sslmitSANZertifikat]] genauer beschrieben.
-
----
-
-Wechseln Sie nun zu CA-LXC:
+In diesem Kapitel erstellen wir ein Zertifikat für unseren Apache2-Webserver auf unserem bereits erstellten CA-LXC. Dieses Zertifikat wird von unserer CA signiert und ermöglicht eine sichere HTTPS-Verbindung in unserem lokalen Netzwerk.
 
 ### 4.1 Schlüssel für den Apache2-Server generieren
 
+Zunächst müssen wir auf die `root`-Ebene wechseln, um Zugriff auf das Verzeichnis `/home/pdal/myCA/private/` zu erhalten.
+
 ```bash
-sudo openssl genrsa -out /etc/ssl/private/apache.key.pem 2048
-sudo chmod 400 /etc/ssl/private/apache.key.pem
+sudo -i
 ```
 
-Dies ist der **private Schlüssel** des Webservers – er muss geheim bleiben und wird später in der Apache2-Konfiguration verwendet.
+```bash
+openssl genrsa -out /home/pdal/myCA/private/server.key.pem 2048
+chmod 400 /home/pdal/myCA/private/server.key.pem
+```
 
 ### 4.2 Certificate Signing Request (CSR) erstellen
 
-```bash
-sudo openssl req -new -key /etc/ssl/private/apache.key.pem \
-  -out /etc/ssl/apache.csr.pem \
-  -subj "/C=DE/ST=Niedersachsen/L=Wilhelmshaven/O=Hochschule/OU=IT/CN=webserver.local"
-```
+Wir bleiben als `root` angemeldet:
 
-Ein **CSR**(Certificate Signing Request) ist eine Anfrage an die CA, ein Zertifikat zu signieren. Er enthält die Identitätsinformationen und den öffentlichen Schlüssel.
+```bash
+openssl req -new -key /home/pdal/myCA/private/server.key.pem \
+  -out /home/pdal/myCA/server.csr.pem \
+  -subj "/C=DE/ST=Niedersachsen/L=Wilhelmshaven/O=Hochschule/OU=IT/CN=apache.local"
+```
 
 ### 4.3 Zertifikat mit der eigenen CA signieren
 
-```bash
-sudo openssl x509 -req -in /etc/ssl/apache.csr.pem \
-  -CA ~/myCA/certs/ca.cert.pem -CAkey ~/myCA/private/ca.key.pem \
-  -CAcreateserial -out ~/myCA/certs/apache.cert.pem -days 825 -sha256
+Beim Signieren des CSR nutzen wir die Option `-extfile`, um die notwendigen Zertifikatserweiterungen (Extensions) anzugeben. Diese definieren, wofür das Zertifikat verwendet werden kann (z. B. HTTPS) und welche Subject Alternative Names (SANs) gültig sind.
+Auch hier bleiben wir weiterhin als `root` angemeldet.
+
+Zuerst erstellen wir die Datei `server.ext` mit einem Editor (z. B. `nano server.ext`) und folgendem Inhalt.
+
+```ini
+#######################################################################
+
+# Erlaubte Schlüsselverwendungen (Pflicht für TLS-Serverzertifikate)
+keyUsage=digitalSignature, keyEncipherment
+
+# Erweiterte Schlüsselverwendungen (serverAuth = HTTPS/TLS)
+extendedKeyUsage=serverAuth
+
+#######################################################################
+# Alternative Namen (SANs = Subject Alternative Names)
+# Hier werden DNS- und IP-Adresse eingetragen, über die der Server
+# erreichbar ist.
+#######################################################################
+
+subjectAltName=@alt_names
+
+[alt_names]
+DNS.1=apache.local
+IP.1=192.168.137.110
+
+#######################################################################
+# Ende der Datei
+#######################################################################
 ```
 
-Hier signiert unsere CA den CSR und erstellt ein **gültiges Serverzertifikat**.
+Nun können wir das Zertifikat mit unserer CA signieren lassen.
+
+```bash
+openssl x509 -req \
+  -in /home/pdal/myCA/server.csr.pem \
+  -CA /home/pdal/myCA/certs/ca.cert.pem \
+  -CAkey /home/pdal/myCA/private/ca.key.pem \
+  -CAcreateserial \
+  -out /home/pdal/myCA/certs/server.cert.pem \
+  -days 825 -sha256 \
+  -extfile /home/pdal/myCA/server.ext
+```
+
+**Hinweis:**
+
+* `-extfile` gibt die Datei an, die die Extensions enthält.
+* In dieser Datei wird u. a. definiert, welche Schlüsselverwendungen erlaubt sind (`keyUsage`), welche erweiterten Schlüsselverwendungen aktiv sind (`extendedKeyUsage`) und welche SANs gültig sind.
+* Da wir hier nur ein Serverzertifikat für Apache erstellen, verwenden wir nur einen DNS- und einen IP-Eintrag.
 
 ### 4.4 Prüfung des Serverzertifikats
 
 ```bash
-openssl x509 -in /etc/ssl/certs/apache.cert.pem -text -noout
+openssl x509 -in /home/pdal/myCA/certs/server.cert.pem -text -noout
 ```
-
-Damit lässt sich das Zertifikat auf Richtigkeit prüfen.
-
-### 4.5 Kopieren der Zertifikate und des Server Schlüssels
 
 ### 4.5 Kopieren der Zertifikate und des Server-Schlüssels
 
-Die für Apache benötigten Zertifikate und der zugehörige private Schlüssel müssen in die entsprechenden Verzeichnisse kopiert werden:
-
+**Auf dem CA-Container:**
 ```bash
-sudo cp /root/ca/private/apache.key.pem /etc/ssl/private/
-sudo cp /root/ca/certs/apache.cert.pem /etc/ssl/certs/
-sudo cp /root/ca/certs/ca.cert.pem /etc/ssl/myCA/certs/
+# Vorbereitung des Download-Ordners (optional, falls nicht bereits vorhanden)
+sudo mkdir -p /home/pdal/download
+sudo chown pdal:pdal /home/pdal/download
+
+# Kopieren der benötigten Dateien in das Download-Verzeichnis
+# Achtung: Der private Schlüssel der CA darf hier NICHT mitkopiert werden!
+sudo cp /home/pdal/myCA/certs/ca.cert.pem /home/pdal/download/
+sudo cp /home/pdal/myCA/certs/server.cert.pem /home/pdal/download/
+sudo cp /home/pdal/myCA/private/server.key.pem /home/pdal/download/
 ```
 
-Achte darauf, dass die Dateirechte korrekt gesetzt sind, damit nur der Benutzer `root` Zugriff auf den privaten Schlüssel hat:
+Die Zertifikatsdateien und der Serverschlüssel werden mit Hilfe von `WinSCP` oder einem anderen SFTP Client von der `CA` auf unseren lokalen Client kopiert und anschließend auf den Apache2 Container in das `/home/pdal/download` kopiert.
+
+**Auf dem Apache2-Container**
+
+Wir wechseln zum Benutzer `root` für die finalen Kopiervorgänge:
 
 ```bash
-sudo chmod 600 /etc/ssl/private/apache.key.pem
-```
+sudo -i
 
-Weitere Details zur Erstellung und Struktur der Zertifikate findest du im Dokument
-👉 **[[2050 CA-sslmitSANZertifikat]]**.
+# Kopieren der Zertifikate in das öffentliche Verzeichnis
+mv /home/pdal/download/ca.cert.pem /etc/ssl/certs/
+mv /home/pdal/download/server.cert.pem /etc/ssl/certs/
+
+# Verschieben des privaten Schlüssels in das geschützte Verzeichnis
+mv /home/pdal/download/server.key.pem /etc/ssl/private/
+
+# Korrekte Rechte für den privaten Schlüssel setzen (sehr wichtig!)
+chown root:root /etc/ssl/private/server.key.pem
+chmod 600 /etc/ssl/private/server.key.pem
+```
 
 ---
 
@@ -150,7 +245,6 @@ Das SSL-Modul ist notwendig, damit Apache2 HTTPS-Verbindungen unterstützen kann
 
 ```bash
 sudo a2enmod ssl
-sudo systemctl restart apache2
 ```
 
 ---
@@ -159,17 +253,18 @@ sudo systemctl restart apache2
 
 Bearbeite die Datei `/etc/apache2/ports.conf` und stelle sicher, dass folgender Eintrag vorhanden ist:
 
-```bash
+```text
 Listen 80
 ```
 
 Bearbeite dann die Standardkonfiguration `/etc/apache2/sites-available/000-default.conf` und stelle sicher, dass die HTTP-Einstellungen korrekt gesetzt sind:
 
 * Die Email des Serveradmins eintragen.
-* ggfs das DocumentRoot anpassen.
-* ggfs die `.` vor dem `<VirtualHost>` und `</VirtualHost>` entfernen.
+* ggf das DocumentRoot anpassen.
 
-```bash
+>Hinweis: In einer Apache-Konfigurationsdatei müssen die <VirtualHost>-Tags direkt am Zeilenanfang stehen und dürfen keine führenden Punkte, Leerzeichen oder Tabs enthalten.
+
+```text
 <VirtualHost *:80>
     ServerAdmin admin@webserver.local
     DocumentRoot /var/www/html
@@ -193,26 +288,28 @@ Diese Konfiguration stellt sicher, dass Apache auf Port 80 lauscht und den Stand
 
 Bearbeite die Datei `/etc/apache2/ports.conf` und stelle sicher, dass folgender Eintrag vorhanden ist:
 
-```bash
+```text
 Listen 443
 ```
 
 Anschließend wird die Standard-SSL-Konfiguration angepasst. Bearbeite dazu `/etc/apache2/sites-available/default-ssl.conf`:
 
-* die Punkte vor dem `.<VirtualHost>` und dem `.</VirtualHost>` müssen entfernt werden.
 * Die Zertifikatspfade hinzufügen bzw anpassen.
-* Die Email des Serveradmins eintragen.
-* ggfs das DocumentRoot anpassen.
+* Die E-mail des Serveradmins eintragen.
+* ggf das DocumentRoot anpassen.
 
-```bash
+>Hinweis: In einer Apache-Konfigurationsdatei müssen die <VirtualHost>-Tags direkt am Zeilenanfang stehen und dürfen keine führenden Punkte, Leerzeichen oder Tabs enthalten.
+
+
+```text
 <VirtualHost *:443>
     ServerAdmin admin@webserver.local
     DocumentRoot /var/www/html
 
     SSLEngine on
-    SSLCertificateFile /etc/ssl/certs/apache.cert.pem
-    SSLCertificateKeyFile /etc/ssl/private/apache.key.pem
-    SSLCACertificateFile /etc/ssl/myCA/certs/ca.cert.pem
+    SSLCertificateFile /etc/ssl/certs/server.cert.pem
+    SSLCertificateKeyFile /etc/ssl/private/server.key.pem
+    SSLCACertificateFile /etc/ssl/certs/ca.cert.pem
 
     <Directory /var/www/html>
         Options Indexes FollowSymLinks
@@ -286,13 +383,17 @@ Wer das [[2050 CA-sslmitSANZertifikat]] Dokument bereits bearbeitet hat, hat die
 
 ### 6.1 Unter Linux
 
+Ersetzen sie `<user>` durch das User-Kennung in das sie die Zertifikate kopiert haben; z. B. `/home/pdal/downloads/...`.
+
 ```bash
-sudo cp /etc/ssl/myCA/certs/ca.cert.pem /usr/local/share/ca-certificates/myCA.crt
+# Kopiert das CA-Zertifikat vom Downloadverzeichnis in das Vertrauensverzeichnis
+sudo cp /home/<user>/download/certs/ca.cert.pem /usr/local/share/ca-certificates/ca.cert.pem
 sudo update-ca-certificates
 ```
 
 ### 6.2 Unter Windows
 
+* drücke `Windows-Taste + R`
 * Öffne `certmgr.msc`
 * Importiere `ca.cert.pem` unter **Vertrauenswürdige Stammzertifizierungsstellen**
 
@@ -303,16 +404,7 @@ sudo update-ca-certificates
 
 ---
 
-## 7. Optional: Serverzertifikate mit Subject Alternative Names (SAN)
-
-Wenn ein Server unter mehreren Namen (z. B. `webserver.local`, `apache.local`) erreichbar ist, muss das Zertifikat diese Namen über **Subject Alternative Names (SAN)** abdecken.
-
->**Hinweis!**
-Wie man eine SAN-Liste erstellt wird im Dokument [[2050 CA-sslmitSANZertifikat]] bereits behandelt.
-
----
-
-## 8. Fehlersuche und Tipps
+## 7. Fehlersuche und Tipps
 
 **Einleitung:**
 
@@ -322,11 +414,11 @@ In diesem Abschnitt werden häufige Fehler und deren Lösungen beschrieben, um t
 | ---------------------------------------- | ------------------------------- | ---------------------------------------------------------- |
 | Browser meldet "Verbindung nicht sicher" | CA-Zertifikat nicht importiert  | Importiere die CA in den Browser                           |
 | Apache startet nicht                     | Fehler in der SSL-Konfiguration | `sudo apachectl configtest` ausführen                      |
-| Falsches Zertifikat geladen              | Pfad oder Name falsch           | Überprüfe `SSLCertificateFile` und `SSLCertificateKeyFile` |
+| Falsches Zertifikat geladen              | Pfad oder Name falsch           | Überprüfe die Zertifikatsdatei und -schlüssel <Pfade der Schlüssel und Zertifikate>, <Dateiname der Zertifikate> |
 
 ---
 
-## 9. Zusammenfassung
+## 8. Zusammenfassung
 
 **Einleitung:**
 
@@ -342,7 +434,7 @@ Damit ist eine vollständig abgesicherte HTTPS-Kommunikation in einer kontrollie
 
 ---
 
-## 10. Weiterführende Themen
+## 9. Weiterführende Themen
 
 **Einleitung:**
 
@@ -355,29 +447,29 @@ Für fortgeschrittene Nutzer gibt es viele Möglichkeiten, die hier erlernten Ko
 
 ---
 
-## 11. Alternative Wege der Zertifikatsverwaltung
+## 10. Alternative Wege der Zertifikatsverwaltung
 
 **Einleitung:**
 
 Neben einer eigenen CA gibt es auch andere Methoden, Zertifikate zu erstellen und zu verwalten. Diese unterscheiden sich in Aufwand, Vertrauen, Kosten und Automatisierung.
 
-### 11.1 Öffentliche Zertifizierungsstellen
+### 10.1 Öffentliche kostenpflichtige Zertifizierungsstellen
 
-Öffentliche CAs (z. B. DigiCert, Sectigo) stellen Zertifikate aus, die automatisch von allen gängigen Browsern und Betriebssystemen vertraut werden. Sie sind ideal für produktive Websites, aber kostenpflichtig.
+Öffentliche CAs (z. B. DigiCert, Sectigo) stellen Zertifikate aus, die automatisch von allen gängigen Browsern und Betriebssystemen vertraut werden. Sie sind ideal für produktive Websites, aber kostenpflichtig. Allerdings ist sie nur für öffentliche Domains geeignet (nicht für interne Netzwerke ohne DNS-Auflösung).
 
-### 11.2 Let's Encrypt
+### 10.2 Let's Encrypt
 
 **Let's Encrypt** ist eine kostenlose, automatisierte und öffentliche CA. Sie ermöglicht über Tools wie **Certbot** eine einfache Einrichtung und automatische Erneuerung von Zertifikaten. Allerdings ist sie nur für öffentliche Domains geeignet (nicht für interne Netzwerke ohne DNS-Auflösung).
 
-### 11.3 Self-Signed Zertifikate ohne CA
+### 10.3 Self-Signed Zertifikate ohne CA
 
-Ein **selbstsigniertes Zertifikat** wird direkt vom Server erzeugt, ohne eine CA. Es bietet Verschlüsselung, aber kein Vertrauen – Browser zeigen daher eine Warnung an. Diese Methode eignet sich nur für Tests oder Entwicklungsumgebungen.
-
----
+Ein **selbstsigniertes Zertifikat** wird direkt vom Server erzeugt, (Tool `openssl`) ohne eine CA. Es bietet Verschlüsselung, aber kein Vertrauen – Browser zeigen daher eine Warnung an. Diese Methode eignet sich nur für Tests oder Entwicklungsumgebungen.
 
 ### Fazit
 
 Eine eigene CA bietet maximale Kontrolle und eignet sich hervorragend für **interne Netzwerke** oder **Lehrumgebungen**. Für **öffentliche Websites** sind jedoch **Let's Encrypt** oder kommerzielle CAs die bevorzugte Lösung, da sie automatisch vertraut werden und den Wartungsaufwand minimieren.
+
+---
 
 ## Quellen
 
@@ -397,4 +489,3 @@ Eine eigene CA bietet maximale Kontrolle und eignet sich hervorragend für **int
 Dieses Werk ist lizenziert unter der **Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz**.
 
 [Zum Lizenztext auf der Creative Commons Webseite](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.de)
-
