@@ -1,8 +1,8 @@
 ---
 title: "REST Applications - In-house Development and External Use" 
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe", "Kalk, Ronald"]
-email: "uwe.bachmann@jade-hs.de"
-organization: "PDAL Project" 
+email: "pdal@jade-hs.de"
+organization: "PDAL Project; Jade HS" 
 date: "2025-10-02" 
 version: "1.0.0" 
 level: "Level 2, Learning Unit 2.4" 

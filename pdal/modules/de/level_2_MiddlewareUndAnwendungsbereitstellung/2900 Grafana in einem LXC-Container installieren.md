@@ -1,8 +1,8 @@
 ---
 title: "Grafana in einem LXC-Container installieren"
 author: ["Gudenkauf, Prof Stefan", "Uwe, Bachmann", "Ronald, Kalk"]
-email: "uwe.bachmann@jade-hs.de"
-organization: "z.B. PDAL-Projekt, Jade Hochschule"
+email: "pdal@jade-hs.de"
+organization: "PDAL-Projekt, Jade Hochschule"
 date: "2025-11-07"
 version: "1.0.0"
 level: "Ebene 2, Lerneinheit 2.9"

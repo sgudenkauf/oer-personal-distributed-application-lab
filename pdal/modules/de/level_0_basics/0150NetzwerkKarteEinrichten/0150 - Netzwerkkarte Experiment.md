@@ -1,7 +1,7 @@
 ---
 title: "00 - Netzwerkkarte USB auf RJ45 Experiment"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe", "Kalk, Ronald"]
-email: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "PDAL-Projekt"
 date: "2025-08-08"
 version: "1.0.0"

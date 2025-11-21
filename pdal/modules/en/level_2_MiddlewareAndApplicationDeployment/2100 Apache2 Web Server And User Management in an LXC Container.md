@@ -1,7 +1,7 @@
 ---
 title: "Apache2 Web Server & User Management in an LXC Container" 
 author: ["Gudenkauf, Prof Stefan", "Uwe, Bachmann", "Ronald, Kalk"]
-mail: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "e.g., PDAL Project, Jade University" 
 date: "2025-08-20" 
 version: "1.0.0" 

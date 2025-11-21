@@ -1,8 +1,8 @@
 ---
 title: "MQTT Clients with Python on Two LXCs" 
-author: ["xxx, xxx"] 
-email: "xxxx@xxx.de" 
-organization: "PDAL-Projekt" 
+author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe", "Kalk, Ronald"]
+email: "pdal@jade-hs.de"
+organization: "PDAL-Projekt, Jade HS" 
 date: "2025-10-17" 
 version: "1.0.0" 
 level: "Level 2, Learning Unit 2.5" 

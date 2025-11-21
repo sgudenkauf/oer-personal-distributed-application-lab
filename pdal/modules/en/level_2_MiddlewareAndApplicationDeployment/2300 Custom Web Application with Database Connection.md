@@ -1,8 +1,8 @@
 ---
 title: "Custom Web Application with Database Connection" 
 author: ["Gudenkauf, Prof Stefan", "Uwe, Bachmann", "Ronald, Kalk"]
-email: "uwe.bachmann@jade-hs.de"
-organization: "e.g., PDAL Project, Jade University" 
+email: "pdal@jade-hs.de"
+organization: "PDAL Project, Jade University" 
 date: "2025-10-01" 
 version: "1.0.0" 
 level: "Level 2, Learning Unit 2.3" 

@@ -1,7 +1,7 @@
 ---
 title: "Functional Check List: pgAdmin4 on LXC"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe", "Kalk, Ronald"]
-email: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "PDAL Project"
 date: "2025-10-30"
 version: "1.0.0"

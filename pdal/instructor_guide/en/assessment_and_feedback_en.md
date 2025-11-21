@@ -1,7 +1,7 @@
 ---
 title: "Competency Assessment in the PDAL: A Hybrid Guide for Instructors"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe"]
-email: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "PDAL Project"
 date: "2025-08-11"
 version: "1.0.0"

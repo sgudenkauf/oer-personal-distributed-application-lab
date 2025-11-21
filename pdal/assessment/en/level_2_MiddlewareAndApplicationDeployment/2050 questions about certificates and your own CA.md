@@ -1,7 +1,7 @@
 ---
 title: "Questions on Certificates and a Custom CA"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe", "Kalk, Ronald"]
-email: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "PDAL Project"
 date: "2025-09-24"
 version: "1.0.0"

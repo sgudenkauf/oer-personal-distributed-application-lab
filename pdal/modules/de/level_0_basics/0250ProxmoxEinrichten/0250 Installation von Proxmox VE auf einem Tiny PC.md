@@ -1,7 +1,7 @@
 ---
 title: "Installation von Proxmox VE auf einem Tiny PC"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe", "Kalk, Ronald"]
-email: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "PDAL-Projekt"
 date: "2025-08-19"
 version: "1.0.0"

@@ -1,8 +1,8 @@
 ---
 title: "Lernen mit dem PDAL: Grundlagen für verteilte Anwendungen und Systeme"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe"]
-email: "uwe.bachmann@jade-hs.de"
-organization: "PDAL-Projekt"
+email: "pdal@jade-hs.de"
+organization: "PDAL-Projekt, Jade HS"
 date: "2025-08-07"
 version: "1.0.0"
 level: "Ebene 0"

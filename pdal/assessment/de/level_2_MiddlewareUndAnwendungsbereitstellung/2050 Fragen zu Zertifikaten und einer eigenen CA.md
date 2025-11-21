@@ -1,7 +1,7 @@
 ---
 title: "Fragen zu Zertifikaten und einer eigenen CA"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe", "Kalk, Ronald"]
-email: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "PDAL-Projekt"
 date: "2025-09-24"
 version: "1.0.0"

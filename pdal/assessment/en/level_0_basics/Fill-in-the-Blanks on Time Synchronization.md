@@ -1,7 +1,7 @@
 ---
 title: "Fill-in-the-Blanks on Time Synchronization"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe", "Kalk, Ronald"]
-email: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "PDAL Project"
 date: "2025-08-20"
 version: "1.0.0"

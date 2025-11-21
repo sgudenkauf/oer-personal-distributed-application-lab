@@ -1,7 +1,7 @@
 ---
 title: "Warum ist die Zeitsynchronisation wichtig?"
 author: ["Gudenkauf, Prof Stefan", "Ronald Kalk", "Uwe Bachmann"]
-mail: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "z.B. PDAL-Projekt, Jade Hochschule"
 date: "2025-08-12"
 version: "1.0.0"

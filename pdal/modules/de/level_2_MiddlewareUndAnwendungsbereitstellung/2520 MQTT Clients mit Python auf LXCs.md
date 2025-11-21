@@ -1,8 +1,8 @@
 ---
 title: "MQTT Clients mit Python auf zwei LXCs"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe", "Kalk, Ronald"]
-email: "uwe.bachmann@jade-hs.de"
-organization: "PDAL-Projekt"
+email: "pdal@jade-hs.de"
+organization: "PDAL-Projekt, Jade HS"
 date: "2025-10-17"
 version: "1.0.0"
 level: "Ebene 2, Lerneinheit 2.5"

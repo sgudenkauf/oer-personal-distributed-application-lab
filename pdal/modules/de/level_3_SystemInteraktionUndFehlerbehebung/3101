@@ -1,0 +1,194 @@
+---
+title: "Grundlagen der Netzwerk-Kommunikationsanalyse"
+author: ["Gudenkauf, Prof Stefan", "Ronald Kalk", "Uwe Bachmann"]
+mail: "pdal@jade-hs.de"
+organization: "PDAL-Projekt, Jade Hochschule"
+date: "2025-11-20"
+version: "1.0.0"
+level: "Ebene 3, Lerneinheit 3.1"
+duration: "Geschätzte Dauer (1 - 2 Stunden)"
+prerequisites: "Abschluss Ebene 2"
+tags: ["Proxmox", "Linux", "Virtualisierung", "Tshark", "Tcpdump"]
+license: "CC BY-SA 4.0"
+---
+
+# Grundlagen der Netzwerk-Kommunikationsanalyse
+
+## Einleitung
+
+Die Netzwerk-Kommunikationsanalyse ist ein zentraler Bestandteil der IT-Sicherheit und vor allem der **systematischen Fehleranalyse**. In komplexen Umgebungen wie der PDAL-Container-Infrastruktur ist die Analyse des Datenverkehrs unverzichtbar, um Probleme wie Paketverlust, fehlerhafte Verbindungen oder falsch konfigurierte Dienste schnell zu erkennen.
+
+Jedes Gerät sendet und empfängt **Datenpakete**, die neben den Nutzdaten (Payload) auch essenzielle Header-Informationen über **Quelle, Ziel, Protokoll und Portnummern** enthalten. Das gezielte Auslesen dieser Metadaten ermöglicht die präzise Diagnose von Netzwerkproblemen.
+
+**Warum ist das wichtig?**
+
+  * **Fehleranalyse:** Paketverluste, Verbindungsabbrüche oder fehlerhafte Routen lassen sich durch Analyse der Pakete erkennen.
+  * **Leistungsoptimierung:** Latenzzeiten und Bandbreitennutzung werden sichtbar.
+  * **Sicherheit:** Unautorisierte Zugriffe oder ungewöhnlicher Traffic können identifiziert werden.
+
+-----
+
+## 1\. Fachbegriffe
+
+  * **Packet (Paket):** Eine über das Netzwerk gesendete Dateneinheit, bestehend aus Header (Metainformationen) und Payload (Nutzdaten). Die Header-Analyse ist der Schlüssel zur Fehlererkennung.
+  * **IP-Adresse:** Eindeutige Kennung eines Geräts im Netzwerk.
+  * **Port:** Logischer Endpunkt auf einem Gerät, der den Datenverkehr für bestimmte Dienste identifiziert (z. B. Port 80 für HTTP).
+  * **Protokoll:** Regeln für die Datenübertragung (z. B. **TCP**, **UDP**, HTTP, DNS). Die Kenntnis der Protokolle ist essenziell für die Interpretation.
+  * **TCP (Transmission Control Protocol):** Verbindungsorientiertes Protokoll, garantiert korrekte und sequenzielle Zustellung. Fehler weisen auf Netzwerkprobleme hin.
+  * **UDP (User Datagram Protocol):** Verbindungsloses Protokoll. Schneller, aber ohne Zustellgarantie.
+  * **Wireshark / TShark:** **Wireshark** ist das grafische Tool, **TShark** die Kommandozeilen-Version für Server und LXC-Container ohne GUI. Sie bieten dieselben tiefgehenden Analysefunktionen.
+  * **tcpdump:** Kommandozeilen-basiertes Tool zur Paketerfassung. Eignet sich besonders für schnelle Live-Analysen oder das Speichern von Traffic zur späteren Auswertung in Wireshark/TShark.
+
+-----
+
+## 2\. Lernziele der Einheit
+
+1.  **Installation und Konfiguration** von **`TShark`** für die zentrale Analyse.
+2.  Erlernen der Nutzung des **Promiscuous Mode** zur Überwachung des gesamten Bridge-Traffics.
+3.  **Filtern** von Netzwerktraffic nach IP, Port und Protokoll zur gezielten Fehleridentifikation.
+4.  Grundlegende **Analyse von TCP-Handshakes** und Anwendungsprotokollen (HTTP, DNS) zwischen Containern.
+5.  Verständnis der **Sicherheitsaspekte** und Limitierungen bei verschlüsselter Kommunikation (TLS/HTTPS).
+
+-----
+
+## 3\. Zentrale Netzwerk-Analyse mit TShark
+
+Ziel ist die Einrichtung eines **zentralen LXC-Containers**, der den gesamten Netzwerkverkehr aller LXC-Container in der Proxmox-Umgebung überwacht. Dies eliminiert die Notwendigkeit, TShark auf jedem Container einzeln zu installieren.
+
+### 3.1 LXC-Container anlegen und TShark installieren
+
+  * **Container-Setup:** Erstellen Sie einen LXC (z.B. **`sniffer`**) mit Ubuntu 24.04, der über dieselbe Bridge (`vmbr0`) wie die anderen Container läuft.
+  * **TShark-Installation:**
+    ```bash
+    sudo apt update && sudo apt upgrade -y
+    sudo apt install tshark -y
+    ```
+
+> Hinweis: Während der Installation muss bestätigt werden, dass **Nicht-Root-Benutzer Pakete sniffen dürfen**, um TShark später einfacher nutzen zu können.
+
+### 3.2 Promiscuous Mode aktivieren
+
+Der **Promiscuous Mode** ist zwingend notwendig, da er das Netzwerk-Interface dazu zwingt, **alle** Pakete zu empfangen, die über die Bridge laufen, auch wenn sie nicht für die eigene IP-Adresse bestimmt sind.
+
+```bash
+sudo ip link set dev eth0 promisc on
+```
+
+  * **Prüfen:**
+    ```bash
+    ip link show eth0
+    # Die Ausgabe muss 'PROMISC' in den Flags enthalten.
+    ```
+
+-----
+
+## 4\. TShark-Befehle und Filterstrategien
+
+### 4.1 Grundlagen
+
+  * **Pakete mitschneiden:**
+    ```bash
+    sudo tshark -i eth0
+    ```
+  * **Logging in Datei:** Zum Speichern für die spätere Analyse (z.B. in Wireshark).
+    ```bash
+    sudo tshark -i eth0 -f "net 192.168.137.0/24" -w /var/log/tshark_capture.pcap
+    ```
+
+### 4.2 Capture Filter (Was soll aufgezeichnet werden?)
+
+Diese Filter basieren auf der `tcpdump`/`libpcap`-Syntax und reduzieren die Datenmenge direkt beim Mitschneiden.
+
+| Filter | Beschreibung | Beispiel |
+| :--- | :--- | :--- |
+| **Host/IP** | Nur Traffic von/zu einer spezifischen IP-Adresse. | `host 192.168.137.120` |
+| **Host-Paar** | Traffic zwischen zwei spezifischen Hosts. | `host 192.168.137.230 and host 192.168.137.120` |
+| **Subnetz** | Traffic innerhalb eines definierten Subnetzes. | `net 192.168.137.0/24` |
+| **Port** | Nur Traffic auf einem bestimmten Port. | `port 80` |
+| **Protokoll** | Nur Traffic eines bestimmten Protokolls. | `tcp` oder `icmp` |
+
+### 4.3 Display Filter (Was soll angezeigt werden?)
+
+Diese Filter basieren auf der **Wireshark-Syntax** und werden **nach der Aufzeichnung** angewendet, um die Pakete detailliert zu analysieren.
+
+| Filter | Beschreibung | Beispiel |
+| :--- | :--- | :--- |
+| **TCP-Handshake** | Nur SYN-Pakete (zum Prüfen, ob die Verbindung gestartet wurde). | `tcp.flags.syn==1` |
+| **HTTP-Requests** | Nur HTTP-Anfragen anzeigen. | `http.request` |
+| **DNS-Abfragen** | Nur DNS-Anfragen anzeigen. | `dns.flags.response == 0` |
+| **Feld-Extraktion** | Spezifische Header-Felder ausgeben. | `-T fields -e ip.src -e ip.dst` |
+
+**Beispiel: Analyse des Drei-Wege-Handshakes**
+
+Der Drei-Wege-Handshake (`SYN`, `SYN-ACK`, `ACK`) ist die Basis jeder TCP-Verbindung. Scheitert dieser, liegt ein Verbindungsproblem (Firewall, Dienst nicht erreichbar) vor.
+
+```bash
+# Schneidet alle Pakete auf dem Datenbank-Port 3306 mit
+sudo tshark -i eth0 -f "port 3306"
+```
+
+  * **Fehlerbild (nur `SYN`):** Der Server ist nicht erreichbar oder eine Firewall blockiert die Antwort (`SYN-ACK`).
+  * **Fehlerbild (`SYN`, `SYN-ACK`, kein `ACK`):** Die Antwort des Servers geht verloren oder der Client kann das letzte Paket nicht zurücksenden (Routing-Problem).
+
+-----
+
+## 5\. Lokale Paketerfassung mit tcpdump
+
+**tcpdump** wird verwendet, wenn eine schnelle Analyse direkt **auf dem Problem-Container** ohne die Komplexität des Promiscuous Mode notwendig ist.
+
+### 5.1 Installation und Berechtigung (CAP\_NET\_RAW)
+
+Um `tcpdump` ohne Root-Rechte auszuführen (Best Practice), wird die Linux-Fähigkeit **`CAP_NET_RAW`** zugewiesen:
+
+```bash
+sudo apt install tcpdump -y
+# Berechtigung setzen (CAP_NET_RAW erlaubt das Sniffen ohne Root)
+sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump
+```
+
+### 5.2 Grundlegende Nutzung
+
+| Befehl | Beschreibung |
+| :--- | :--- |
+| `tcpdump -i eth0` | Pakete auf dem Interface `eth0` erfassen (nur Header). |
+| `tcpdump -i eth0 -A` | Paketinhalte zusätzlich im ASCII-Format anzeigen (Achtung: sensible Daten\!). |
+| `tcpdump -i eth0 -w capture.pcap` | Pakete in eine Datei speichern (`.pcap`) zur späteren Analyse. |
+| `tcpdump -i eth0 tcp port 443 and host 192.168.137.110` | Filterung nach Protokoll, Port und Host. |
+
+### 5.3 Kombination mit T-Shark
+
+Gespeicherte `tcpdump`-Dateien (`.pcap`) können direkt mit T-Shark oder Wireshark für die tiefere Analyse geöffnet werden:
+
+```bash
+tshark -r capture.pcap -Y "http.request"
+```
+
+-----
+
+## 6\. Sicherheitshinweise und Best Practices
+
+  * **Verschlüsselte Kommunikation (TLS/HTTPS):** Der Inhalt (`Payload`) von TLS-Verbindungen ist verschlüsselt und kann nicht mitgelesen werden. Für die Fehleranalyse sind jedoch die **Metadaten** (IP, Port, Timeouts, fehlerhafte Handshakes) weiterhin sichtbar und wertvoll.
+  * **Zugriffsbeschränkung:** Da Paketerfassung sensible Daten aufzeichnen kann, sollte der Zugriff auf Container, auf denen Sniffer laufen, strikt auf vertrauenswürdige Benutzer beschränkt werden (z.B. nur `pdal`).
+  * **Ressourcen:** Beim Logging in Dateien (`-w`) den Speicherplatz beachten. Immer Filter verwenden, um die erfasste Datenmenge zu limitieren.
+
+-----
+
+## Fazit
+
+Die **Netzwerk-Kommunikationsanalyse** mithilfe von **TShark** und **tcpdump** ist das unverzichtbare Werkzeug für die **Fehlerdiagnose** in Container-Umgebungen. Die Einrichtung eines zentralen Sniffer-LXC im **Promiscuous Mode** ermöglicht die Überwachung des gesamten Bridge-Traffics. Durch die Anwendung von Capture- und Display-Filtern können Multiplikatoren und Lernende Verbindungsprobleme, Timeouts und fehlerhafte Protokollinteraktionen schnell und zuverlässig identifizieren und beheben.
+
+-----
+
+## Quellen
+
+  * „tshark(1)“. Zugegriffen: 14. November 2025. [Online]. Verfügbar unter: [Tshark Manual](https://www.wireshark.org/docs/man-pages/tshark.html)
+  * „Home | TCPDUMP & LIBPCAP“. Zugegriffen: 14. November 2025. [Online]. Verfügbar unter: [tcpdump Doc](https://www.tcpdump.org/index.html#documentation)
+
+-----
+
+## Lizenz
+
+Dieses Werk ist lizenziert unter der **Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz**.
+
+[Zum Lizenztext auf der Creative Commons Webseite](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.de)
+

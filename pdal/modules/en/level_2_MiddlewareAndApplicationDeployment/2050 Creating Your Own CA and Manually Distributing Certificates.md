@@ -1,7 +1,7 @@
 ---
 title: "Creating a Custom CA (Certificate Authority) and Manually Distributing Certificates" 
 author: ["Gudenkauf, Prof Stefan", "Uwe, Bachmann", "Ronald, Kalk"]
-mail: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "PDAL Project, Jade Hochschule" 
 date: "2025-11-06" 
 version: "1.0.0" 

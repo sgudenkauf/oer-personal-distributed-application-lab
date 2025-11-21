@@ -1,8 +1,8 @@
 ---
 title: "Create and Start an LXC Container"
 author: ["Gudenkauf, Prof Stefan", "Ronald Kalk", "Uwe Bachmann"]
-mail: "uwe.bachmann@jade-hs.de"
-organization: "z.B. PDAL-Projekt, Jade Hochschule"
+email: "pdal@jade-hs.de"
+organization: "PDAL-Projekt, Jade Hochschule"
 date: "2025-08-21"
 version: "1.0.0"
 level: "Level 1, Learning Unit 1.1"

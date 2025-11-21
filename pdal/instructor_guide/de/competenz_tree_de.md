@@ -1,7 +1,7 @@
 ---
 title: "Kompetenz-Baumstruktur: Bottom-Up Lernpfad für verteilte Systeme im PDAL"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe"]
-email: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "PDAL-Projekt"
 date: "2025-08-11"
 version: "1.0.0"
@@ -127,7 +127,6 @@ Ziel ist es, Ihnen ein strukturiertes, aber dennoch anpassbares Framework an die
         * **Lerneinheit 2.6: Datenbank PostgrSQL und Datenbankmangementsystem (DBMS) pgadmin4**
           * **Ziel:** Installation von PostgreSQL und pgadmin4 und Anlegen unterschiedlicher Nutzergruppen/-user, Anlegen von Datenbank und Zuweisung von Rechten, Absicherung mit SSL
           * **Inhalte:** `apt install postgres`, Benutzer- und Rechteverwaltung, SSL-Zertifikate, Konfiguration PostgreSQL und pgadmin4.
-
         * **Lerneinheit 2.8: JupyterLab: Python, Java, R für Datenanalyse & Interaktion (6-10 Stunden)**
             * **Ziel:** Installation und Konfiguration von JupyterLab und Nutzung für interaktive Skripte und Datenanalyse in Python, Java und R.
             * **Inhalte:** `apt install jupyterlab`, Installation von Kernels (Python, IJava, R-Kernel), Einbinden externer Bibliotheken (z.B. `pandas`, `requests`, `paho`), Schreiben einfacher Code-Zellen zur Interaktion mit anderen PDAL-Diensten (z.B. REST-API-Calls, MQTT-Publishing).

@@ -1,8 +1,8 @@
 ---
 title: "Installing Grafana in an LXC Container" 
-author: ["xxx, xxx"] 
-email: "xxxx@xxx.de" 
-organization: "e.g., PDAL Project, Jade University of Applied Sciences" 
+author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe", "Kalk, Ronald"]
+email: "pdal@jade-hs.de"
+organization: "PDAL Project, Jade University of Applied Sciences" 
 date: "2025-11-07" version: "1.0.0" level: "Level 2, Learning Unit 2.9" 
 duration: "Estimated Duration (e.g., 1-2 hours)" 
 prerequisites: ["Tiny PC with Proxmox installed and at least one LXC container", "Server certificate from an internal CA"] 

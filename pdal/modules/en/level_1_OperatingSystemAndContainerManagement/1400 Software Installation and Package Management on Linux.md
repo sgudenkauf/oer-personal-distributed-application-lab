@@ -1,8 +1,8 @@
 ---
 title: "Software Installation and Package Management" 
 author: ["Gudenkauf, Prof Stefan", "Uwe, Bachmann", "Ronald, Kalk"]
-mail: "uwe.bachmann@jade-hs.de"
-organization: "e.g., PDAL-Projekt, Jade University of Applied Sciences" 
+email: "pdal@jade-hs.de"
+organization: "PDAL-Projekt, Jade University of Applied Sciences" 
 date: "2025-08-26" 
 version: "1.0.0" level: "Level 1, Learning Unit 1.4" 
 duration: "Estimated Duration (e.g., 2-3 hours)" 

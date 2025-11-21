@@ -1,7 +1,7 @@
 ---
 title: "Fragen zum Apache2-Webserver und Benutzerverwaltung"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe", "Kalk, Ronald"]
-email: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "PDAL-Projekt"
 date: "2025-09-25"
 version: "1.0.0"

@@ -1,8 +1,8 @@
 ---
 title: "Netzwerkkonfiguration und -diagnose in LXC-Containern"
 author: ["Gudenkauf, Prof Stefan", "Uwe, Bachmann", "Ronald, Kalk"]
-mail: "uwe.bachmann@jade-hs.de"
-organization: "z.B. PDAL-Projekt, Jade Hochschule"
+email: "pdal@jade-hs.de"
+organization: "PDAL-Projekt, Jade Hochschule"
 date: "2025-08-22"
 version: "1.0.0"
 level: "Ebene 1, Lerneinheit 1.3"

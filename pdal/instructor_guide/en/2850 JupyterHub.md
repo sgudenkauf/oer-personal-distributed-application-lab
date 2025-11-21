@@ -1,7 +1,7 @@
 ---
 title: "2850 JupyterHub in System-Wide venv with Multi-User Operation" 
 author: ["Gudenkauf, Prof Stefan", "Uwe, Bachmann", "Ronald, Kalk"]
-mail: "uwe.bachmann@jade-hs.de" 
+email: "pdal@jade-hs.de"
 organization: "PDAL Project, Jade University of Applied Sciences" 
 date: "2025-11-14" 
 version: "1.0.0" 

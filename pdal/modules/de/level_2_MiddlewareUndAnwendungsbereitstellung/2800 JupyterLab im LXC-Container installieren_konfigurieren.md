@@ -1,8 +1,8 @@
 ---
 title: "Jupyterlab im LXC-Container installieren & konfigurieren"
 author: ["Gudenkauf, Prof Stefan", "Uwe, Bachmann", "Ronald, Kalk"]
-mail: "uwe.bachmann@jade-hs.de"
-organization: "z.B. PDAL-Projekt, Jade Hochschule"
+email: "pdal@jade-hs.de"
+organization: "PDAL-Projekt, Jade Hochschule"
 date: "2025-08-20"
 version: "1.0.0"
 level: "Ebene 2, Lerneinheit 2.9"

@@ -1,7 +1,7 @@
 ---
 title: "Questions on MariaDB and phpMyAdmin"
 author: ["Gudenkauf, Prof Stefan", "Uwe, Bachmann", "Ronald, Kalk"]
-email: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "PDAL-Projekt"
 date: "2025-09-29"
 version: "1.0.0"

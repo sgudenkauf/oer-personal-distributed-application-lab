@@ -1,7 +1,7 @@
 ---
 title: "Test - Fragen zu den Grundlagen der ICS-Konfiguration"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe"]
-email: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "PDAL-Projekt"
 date: "2025-08-08"
 version: "1.0.0"

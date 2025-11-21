@@ -1,8 +1,8 @@
 ---
 title: "Certificate Management and HTTPS for Apache2" 
 author: ["Gudenkauf, Prof Stefan", "Uwe, Bachmann", "Ronald, Kalk"]
-email: "uwe.bachmann@jade-hs.de"
-organization: "e.g., PDAL Project, Jade University of Applied Sciences" 
+email: "pdal@jade-hs.de"
+organization: "PDAL Project, Jade University of Applied Sciences" 
 date: "2025-11-13" 
 version: "1.0.0" 
 level: "Level 2, Learning Unit 2.1.5" 

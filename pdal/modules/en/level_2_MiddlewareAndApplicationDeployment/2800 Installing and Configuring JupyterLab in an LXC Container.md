@@ -1,8 +1,8 @@
 ---
 title: "Installing & Configuring JupyterLab in an LXC Container" 
-author: ["xxx, xxx"] 
-mail: "xxxx@xxx.de" 
-organization: "e.g., PDAL Project, Jade Hochschule" 
+author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe", "Kalk, Ronald"]
+email: "pdal@jade-hs.de"
+organization: "PDAL Project, Jade Hochschule" 
 date: "2025-08-20" 
 version: "1.0.0" 
 level: "Level 2, Learning Unit 2.9" 

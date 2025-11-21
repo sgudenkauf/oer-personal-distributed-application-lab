@@ -1,7 +1,7 @@
 ---
 title: "Fragen zur Grafana-Installation"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe", "Kalk, Ronald"]
-email: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "PDAL-Projekt"
 date: "2025-11-07"
 version: "1.0.0"

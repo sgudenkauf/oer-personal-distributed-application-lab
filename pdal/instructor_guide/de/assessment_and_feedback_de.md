@@ -1,7 +1,7 @@
 ---
 title: "Kompetenzbewertung im PDAL: Ein hybrider Leitfaden für Lehrende"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe"]
-email: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "PDAL-Projekt"
 date: "2025-08-11"
 version: "1.0.0"

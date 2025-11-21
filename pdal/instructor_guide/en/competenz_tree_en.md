@@ -1,7 +1,7 @@
 ---
 title: "Competency Tree Structure: Bottom-Up Learning Path for Distributed Systems in the PDAL"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe"]
-email: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "PDAL Project"
 date: "2025-08-11"
 version: "1.0.0"

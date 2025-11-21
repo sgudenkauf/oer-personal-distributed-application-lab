@@ -1,7 +1,7 @@
 ---
 title: "Fragen zur Software-Installation und Paketverwaltung unter Linux"
 author: ["Prof. Gudenkauf, Stefan", "Bachmann, Uwe", "Kalk, Ronald"]
-email: "uwe.bachmann@jade-hs.de"
+email: "pdal@jade-hs.de"
 organization: "PDAL-Projekt"
 date: "2025-08-26"
 version: "1.0.0"
