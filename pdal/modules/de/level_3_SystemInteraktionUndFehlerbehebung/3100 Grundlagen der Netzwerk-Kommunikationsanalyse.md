@@ -114,6 +114,8 @@ sudo apt install tshark -y
 
 Der `Promiscuous Mode` ist ein spezieller Betriebsmodus eines `Netzwerk-Interfaces`, bei dem das Interface alle Netzwerkpakete empfängt, die über das `Netzwerksegment` oder die `Bridge` laufen, unabhängig davon, ob die Pakete für die eigene `IP-Adresse` bestimmt sind oder nicht.
 
+> ⚠️ ACHTUNG: Die Aktivierung des **Promiscuous Mode** darf nur zu Diagnosezwecken im eigenen lokalen Netzwerk und/oder in Absprache mit dem Netzwerkadministrator erfolgen. Das Mitschneiden von fremdem Datenverkehr ohne Einwilligung kann gegen Datenschutzbestimmungen und geltendes Recht verstoßen.
+
 **Wozu es dient:**
 
 Ermöglicht die zentralisierte Analyse des gesamten Netzwerkverkehrs.
@@ -257,7 +259,7 @@ sudo apt install tcpdump -y
 tcpdump --version
 ```
 
-Erwartete Ausgabe: tcpdump Version 4.x.x oder ähnlich.
+Erwartete Ausgabe: `tcpdump Version 4.x.x` oder ähnlich.
 
 ---
 
