@@ -4,7 +4,7 @@ authors =  ["Stefan Gudenkauf", "Uwe Bachmann"]
 description = "Grundlagen für verteilte Anwendungen und Systeme im Selbststudium."
 language = "de"
 
-[preprocessor.my-yaml-frontmatter]
+[preprocessor.my-frontmatter]
 command = "python3 ./preproc-frontmatter.py"
 
 [output.html]
