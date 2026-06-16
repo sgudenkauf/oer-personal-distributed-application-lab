@@ -11,6 +11,7 @@ prerequisites: "Tiny- PC mit installiertem Proxmox und mindestens einem LXC-Cont
 tags: ["Proxmox", "Linux", "Virtualisierung", "JupyterHub", "JupyterLab"]
 license: "CC BY-NC-SA 4.0"
 ---
+
 >Hinweis: Nur für Multiplikatoren
 
 # JupyterHub in systemweiter venv mit Mehrbenutzerbetrieb, Admin-Zugriff und systemweiten MQTT- und GSON-Bibliotheken

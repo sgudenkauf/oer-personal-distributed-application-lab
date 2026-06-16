@@ -7,7 +7,7 @@ date: "2025-08-11"
 version: "1.0.0"
 level: "Instructor guide"
 duration: "N/a"
-prerequisites:["none"]
+prerequisites: ["none"]
 tags: ["PDAL", "Grundlagen", "Infrastruktur", "Didaktik", "Instructur Guide"]
 license: "CC BY-SA 4.0"
 ---

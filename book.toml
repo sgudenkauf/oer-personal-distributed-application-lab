@@ -1,0 +1,11 @@
+[book]
+title = "Lernen mit dem Personal Distributed Applications Lab"
+authors =  ["Stefan Gudenkauf", "Uwe Bachmann"]
+description = "Grundlagen für verteilte Anwendungen und Systeme im Selbststudium."
+language = "de"
+
+[preprocessor.my-yaml-frontmatter]
+command = "python3 ./preproc-frontmatter.py"
+
+[output.html]
+mathjax-support = true

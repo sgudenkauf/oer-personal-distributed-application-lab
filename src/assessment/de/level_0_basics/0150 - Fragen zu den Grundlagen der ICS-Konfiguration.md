@@ -7,7 +7,7 @@ date: "2025-08-08"
 version: "1.0.0"
 level: "Ebene 0, Lerneinheit 0.1, Assessment"
 duration: "0,2 Std"
-prerequisites:["Abgeschlossen -  Dokument: 0150 - Netzwerkkarte Experiment"]
+prerequisites: ["Abgeschlossen -  Dokument: 0150 - Netzwerkkarte Experiment"]
 tags: ["PDAL","Assessment"]
 license: "CC BY-SA 4.0"
 ---

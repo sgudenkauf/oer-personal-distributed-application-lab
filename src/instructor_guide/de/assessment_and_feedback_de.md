@@ -7,10 +7,11 @@ date: "2025-08-11"
 version: "1.0.0"
 level: "Instructor guide"
 duration: "N/a"
-prerequisites:["none"]
+prerequisites: ["none"]
 tags: ["PDAL", "Didaktik", "Instructur Guide", "Assessment"]
 license: "CC BY-SA 4.0"
 ---
+
 # Kompetenzbewertung im PDAL: Ein hybrider Leitfaden für Lehrende
 
 Das Personal Distributed Applications Lab (PDAL) ermöglicht den Lernenden, im eigenen Tempo tiefgreifende praktische Erfahrungen zu sammeln. Als Lehrende stehen Sie vor der Herausforderung, diese individuellen Lernerfolge und vor allem die **Entwicklung von Kompetenzen** in Bereichen wie Problemlösung und Systemverständnis nachvollziehbar zu beurteilen.
