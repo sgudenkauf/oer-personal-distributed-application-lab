@@ -87,7 +87,7 @@ To get started, you will need a few things:
 * **USB Network Adapter:** To isolate the PDAL from your home network.
 * **Practice Computer:** A dedicated machine (e.g., an older laptop or a mini PC) that will be used exclusively for the PDAL.
 
-![Equipment](./pdal/attachment/Ausstattung.jpg)
+![Equipment](./src/attachment/Ausstattung.jpg)
 
 ### Learning Goals of the PDAL
 
