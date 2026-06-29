@@ -55,11 +55,11 @@ mdbook --help
 - `mdbook serve` serves a book at http://localhost:3000, and rebuilds it on changes.
 - `mdbook clean` deletes a built book. Recommended to be used before every rebuild and/or if changes are not reflected into a served book.
 
-
-
 ## On Preprocessors
 
-The output of the [build process](https://eli.thegreenplace.net/2025/plugins-case-study-mdbook-preprocessors/) can be modified by preprocessors, if included in the `book.toml` build configuration file. There are several preprocessors crates available, but most are not well documented, or only work well with older versions of mdBook that use a different internal structure for book content.
+The output of the [build process](https://eli.thegreenplace.net/2025/plugins-case-study-mdbook-preprocessors/) can be modified by preprocessors, if included in the `book.toml` build configuration file. 
+
+There are several preprocessors crates available, but some are not well documented, or only work well with older versions of mdBook that use a different internal structure for book content.
 
 In our case, we use a [custom](https://www.thenegation.com/posts/mdbook-preprocessing/) Python preprocessor `preproc-frontmatter.py` that replaces yaml formatters in all Markdown files with html tables. See the current `book.toml`:
 
@@ -80,31 +80,6 @@ If you modify or add additional packages to the project, document the depdendenc
 (.venv) pip freeze --local > requirements.txt 
 ```
 
-### Alternative preprocessors:
-
-Available preprocessors (Rust binaries):
-
-```bash
-cargo install mdbook-frontmatter-strip
-cargo install mdbook-frontmatter
-```
-
-- `mdbook-frontmatter-strip` strips the yaml formatters from all Markdown files. Add to `book.toml` as follows:
-
-    ```toml
-    [preprocessor.frontmatter-strip]
-    renderers = ["html"]
-    ```
-
-- `mdbook-frontmatter` replaces yaml formatters in all Markdown files with pretty html code. Add to `book.toml` as follows:
-
-    ```toml
-    [preprocessor.frontmatter]
-    ```
-
-
-
-
 The project directory also includes a minimal Python preprocessor `preproc-min.py` as a template:
 
 ```python
@@ -123,6 +98,42 @@ context, book = json.load(sys.stdin)
 # write back unmodified
 json.dump(book, sys.stdout) 
 ```
+
+### Alternative Rust preprocessors:
+
+Available preprocessors (Rust binaries):
+
+```bash
+cargo install mdbook-mermaid
+cargo install mdbook-frontmatter-strip
+cargo install mdbook-frontmatter
+```
+
+- `mdbook-frontmatter-strip` strips the yaml formatters from all Markdown files. Add to `book.toml` as follows:
+
+    ```toml
+    [preprocessor.frontmatter-strip]
+    renderers = ["html"]
+    ```
+
+- `mdbook-frontmatter` replaces yaml formatters in all Markdown files with pretty html code. Add to `book.toml` as follows:
+
+    ```toml
+    [preprocessor.frontmatter]
+    ```
+- `mdbook-mermaid` generates visual diagrams from Mermaid code using [mermaid.js](https://mermaid.js.org). Add to `book.toml` as follows:
+
+    ```toml
+    [preprocessor.mermaid]
+    command = "mdbook-mermaid"
+
+    [output.html]
+    additional-js = ["mermaid.min.js", "mermaid-init.js"]
+    ```
+    
+    [This preprocessor](https://github.com/badboy/mdbook-mermaid) will copy the files `mermaid.min.js` and `mermaid-init.js` into your book's directory. You find these files in the `src/bin/assets` directory. 
+    
+    You can modify `mermaid-init.js` to configure Mermaid, see the [Mermaid documentation](https://mermaid.js.org/config/setup/README.html#mermaidapi-configuration-defaults) for all options.
 
 ## Troubleshooting
 
